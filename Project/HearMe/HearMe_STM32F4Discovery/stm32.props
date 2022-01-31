@@ -10,7 +10,7 @@
 	<ItemDefinitionGroup>
 		<ClCompile>
 			<PreprocessorDefinitions>ARM_MATH_CM4;flash_layout;STM32F407VG;USE_FREERTOS;STM32F407xx;USE_HAL_DRIVER;USE_FULL_LL_DRIVER;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
-			<AdditionalIncludeDirectories>%(ClCompile.AdditionalIncludeDirectories);$(ProjectDir);$(BSP_ROOT)/FreeRTOS/Source/CMSIS_RTOS;$(BSP_ROOT)/FreeRTOS/Source/Include;$(BSP_ROOT)/FreeRTOS/Source/Portable/gcc/ARM_CM3;$(BSP_ROOT)/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc;$(BSP_ROOT)/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc/Legacy;$(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Core/Include;$(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include;$(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Include;$(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/RTOS2/Include</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>%(ClCompile.AdditionalIncludeDirectories);$(ProjectDir);$(BSP_ROOT)/FreeRTOS/Source/CMSIS_RTOS_V2;$(BSP_ROOT)/FreeRTOS/Source/Include;$(BSP_ROOT)/FreeRTOS/Source/Portable/gcc/ARM_CM4F;$(BSP_ROOT)/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc;$(BSP_ROOT)/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc/Legacy;$(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Core/Include;$(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include;$(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Include;$(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/RTOS2/Include</AdditionalIncludeDirectories>
 		</ClCompile>
 	</ItemDefinitionGroup>
 	<ItemDefinitionGroup>
