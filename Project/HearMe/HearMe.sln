@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HearMe_STM32F4Discovery", "HearMe_STM32F4Discovery\HearMe_STM32F4Discovery.vcxproj", "{6AD32134-7B86-4D70-9BC4-9B764FE5BAE8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|VisualGDB = Debug|VisualGDB
+		Release|VisualGDB = Release|VisualGDB
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AD32134-7B86-4D70-9BC4-9B764FE5BAE8}.Debug|VisualGDB.ActiveCfg = Debug|VisualGDB
+		{6AD32134-7B86-4D70-9BC4-9B764FE5BAE8}.Debug|VisualGDB.Build.0 = Debug|VisualGDB
+		{6AD32134-7B86-4D70-9BC4-9B764FE5BAE8}.Release|VisualGDB.ActiveCfg = Release|VisualGDB
+		{6AD32134-7B86-4D70-9BC4-9B764FE5BAE8}.Release|VisualGDB.Build.0 = Release|VisualGDB
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7B352CFF-0325-401F-838C-4F02E8E3AC2F}
+	EndGlobalSection
+EndGlobal
