@@ -40,6 +40,9 @@
     <Filter Include="VisualGDB settings">
       <UniqueIdentifier>{634e16c5-60b0-4c44-b91b-4ad34c79ad9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OS">
+      <UniqueIdentifier>{e85c68b4-0c2c-43f2-953e-8694110f7776}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HearMe_STM32F4Discovery.cpp">
@@ -798,10 +801,22 @@
     <ClCompile Include="Board.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="GeneralProcess.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="OS\SystemOS.cpp">
+      <Filter>OS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
-      <Filter>Header files</Filter>
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneralProcess.h">
+      <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="OS\SystemOS.h">
+      <Filter>OS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -52,3 +52,15 @@ void BoardInit(void) {
 	HAL_Init();
 	SystemClock_Config();
 }
+
+void GpioInit() {
+	__GPIOD_CLK_ENABLE();
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+	GPIO_InitStructure.Pin = GPIO_PIN_15 | GPIO_PIN_14;
+
+	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+	GPIO_InitStructure.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
+}

@@ -1,31 +1,37 @@
-#ifndef __BOARD_H
-#define __BOARD_H
+#pragma once
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
 
 #include <stm32f4xx_hal.h>
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define GetTickCount HAL_GetTick
-#define TaskSleep(ADelayMS) osDelay(ADelayMS)
-#define TaskSleepZero() osThreadYield()
+#include "SystemOS.h"
 
-#define ReadPortPin(APort, APin) (*((BYTE *)(PERIPH_BB_BASE + (((DWORD)(((DWORD) & (APort->IDR)) - PERIPH_BASE) * 0x20) + (APin * 4)))))
-#define WritePortPin(APort, APin, AValue) (*((BYTE *)(PERIPH_BB_BASE + (((DWORD)(((DWORD) & (APort->ODR)) - PERIPH_BASE) * 0x20) + (APin * 4)))) = AValue)
-
-#define SetPortPin(APort, APin) (*((BYTE *)(PERIPH_BB_BASE + (((DWORD)(((DWORD) & (APort->BSRR)) - PERIPH_BASE) * 0x20) + (APin * 4)))) = 1)
-#define ResetPortPin(APort, APin) (*((BYTE *)(PERIPH_BB_BASE + (((DWORD)(((DWORD) & (APort->BRR)) - PERIPH_BASE) * 0x20) + (APin * 4)))) = 1)
-
-#define Delay_nS(ACount_nS)                                                                                                                                    \
+#define ReadPortPin(port, pin) ((port->ODR & pin) == pin)
+#define WritePortPin(port, pin, value)                                                                                                                         \
 	{                                                                                                                                                          \
-		DWORD i = (SystemCoreClock / 100000000) * (ACount_nS / 10);                                                                                            \
-		while (i--)                                                                                                                                            \
-			__NOP();                                                                                                                                           \
+		if (value) {                                                                                                                                           \
+			SetPortPin(port, pin);                                                                                                                             \
+		} else {                                                                                                                                               \
+			ResetPortPin(port, pin);                                                                                                                           \
+		}                                                                                                                                                      \
 	}
-#define Delay_uS(ACount_uS)                                                                                                                                    \
+
+#define SetPortPin(port, pin) WRITE_REG(port->BSRR, pin)
+#define ResetPortPin(port, pin) WRITE_REG(port->BSRR, (pin << 16))
+
+#define TogglePortPin(port, pin)                                                                                                                               \
 	{                                                                                                                                                          \
-		DWORD i = (SystemCoreClock / 1000000) * ACount_uS;                                                                                                     \
-		while (i--)                                                                                                                                            \
-			__NOP();                                                                                                                                           \
+		if (ReadPortPin(port, pin)) {                                                                                                                          \
+			ResetPortPin(port, pin);                                                                                                                           \
+		} else {                                                                                                                                               \
+			SetPortPin(port, pin);                                                                                                                             \
+		}                                                                                                                                                      \
 	}
 
 inline void Error_Handler() {
@@ -35,4 +41,4 @@ inline void Error_Handler() {
 
 void BoardInit(void);
 
-#endif /* end __BOARD_H */
+void GpioInit();
