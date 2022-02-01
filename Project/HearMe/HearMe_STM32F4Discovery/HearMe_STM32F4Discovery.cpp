@@ -9,9 +9,7 @@ int main(void) {
 
 	InitGeneralProcess();
 
-
-
-	xTaskCreate(&TaskGeneralProcess, "GeneralProcess", 2048, NULL, 5, &GeneralProcess.TaskHandle);
+	xTaskCreate(&TaskGeneralProcess, "GeneralProcess", 2048, NULL, tskIDLE_PRIORITY, &GeneralProcess.TaskHandle);
 
 	vTaskStartScheduler();
 	while (true)

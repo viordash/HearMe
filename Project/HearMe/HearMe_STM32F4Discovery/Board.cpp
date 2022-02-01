@@ -54,13 +54,26 @@ void BoardInit(void) {
 }
 
 void GpioInit() {
+	__GPIOA_CLK_ENABLE();
 	__GPIOD_CLK_ENABLE();
-	GPIO_InitTypeDef GPIO_InitStructure;
+	
+	GPIO_InitTypeDef gpio;
 
-	GPIO_InitStructure.Pin = GPIO_PIN_15 | GPIO_PIN_14;
+	gpio.Mode = GPIO_MODE_OUTPUT_PP;
+	gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+	gpio.Pull = GPIO_NOPULL;
 
-	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-	GPIO_InitStructure.Pull = GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
+	gpio.Pin = LED_BLUE_PIN;
+	HAL_GPIO_Init(LED_BLUE_PORT, &gpio);
+	gpio.Pin = LED_RED_PIN;
+	HAL_GPIO_Init(LED_RED_PORT, &gpio);
+	gpio.Pin = LED_ORANGE_PIN;
+	HAL_GPIO_Init(LED_ORANGE_PORT, &gpio);
+	gpio.Pin = LED_GREEN_PIN;
+	HAL_GPIO_Init(LED_GREEN_PORT, &gpio);
+
+	gpio.Mode = GPIO_MODE_INPUT;
+	gpio.Pull = GPIO_PULLDOWN;
+	gpio.Pin = BUTTON_PIN;
+	HAL_GPIO_Init(BUTTON_PORT, &gpio);
 }

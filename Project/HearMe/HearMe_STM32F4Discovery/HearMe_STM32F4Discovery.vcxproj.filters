@@ -43,6 +43,12 @@
     <Filter Include="OS">
       <UniqueIdentifier>{e85c68b4-0c2c-43f2-953e-8694110f7776}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Peripheral">
+      <UniqueIdentifier>{32a276e9-6a95-4138-843d-bc29dfd27ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{988b6cef-24b9-4c80-a6cd-42bf72a0a237}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HearMe_STM32F4Discovery.cpp">
@@ -807,6 +813,12 @@
     <ClCompile Include="OS\SystemOS.cpp">
       <Filter>OS</Filter>
     </ClCompile>
+    <ClCompile Include="Peripheral\Button.cpp">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\TimeHelper.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -817,6 +829,12 @@
     </ClInclude>
     <ClInclude Include="OS\SystemOS.h">
       <Filter>OS</Filter>
+    </ClInclude>
+    <ClInclude Include="Peripheral\Button.h">
+      <Filter>Peripheral</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\TimeHelper.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

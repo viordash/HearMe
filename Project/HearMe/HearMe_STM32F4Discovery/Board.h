@@ -12,7 +12,23 @@
 
 #include "SystemOS.h"
 
-#define ReadPortPin(port, pin) ((port->ODR & pin) == pin)
+#define LED_ORANGE_PIN GPIO_PIN_13
+#define LED_ORANGE_PORT GPIOD
+
+#define LED_GREEN_PIN GPIO_PIN_12
+#define LED_GREEN_PORT GPIOD
+
+#define LED_RED_PIN GPIO_PIN_14
+#define LED_RED_PORT GPIOD
+
+#define LED_BLUE_PIN GPIO_PIN_15
+#define LED_BLUE_PORT GPIOD
+
+#define BUTTON_PIN GPIO_PIN_0
+#define BUTTON_PORT GPIOA
+
+#define ReadPortPin(port, pin) ((port->IDR & pin) == pin)
+
 #define WritePortPin(port, pin, value)                                                                                                                         \
 	{                                                                                                                                                          \
 		if (value) {                                                                                                                                           \
@@ -27,7 +43,7 @@
 
 #define TogglePortPin(port, pin)                                                                                                                               \
 	{                                                                                                                                                          \
-		if (ReadPortPin(port, pin)) {                                                                                                                          \
+		if (((port->ODR & pin) == pin)) {                                                                                                                      \
 			ResetPortPin(port, pin);                                                                                                                           \
 		} else {                                                                                                                                               \
 			SetPortPin(port, pin);                                                                                                                             \

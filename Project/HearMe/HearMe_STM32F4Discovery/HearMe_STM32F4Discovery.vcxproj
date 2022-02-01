@@ -45,7 +45,7 @@
       <CPPLanguageStandard>GNUPP11</CPPLanguageStandard>
       <InputLanguage>
       </InputLanguage>
-      <AdditionalIncludeDirectories>OS;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OS;Peripheral;Utils;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -80,7 +80,10 @@
     <ClCompile Include="GeneralProcess.cpp" />
     <ClCompile Include="HearMe_STM32F4Discovery.cpp" />
     <ClCompile Include="OS\SystemOS.cpp" />
+    <ClCompile Include="Peripheral\Button.cpp" />
     <ClCompile Include="system_stm32f4xx.c" />
+    <ClCompile Include="Utils\TimeHelper.cpp" />
+    <ClInclude Include="Utils\TimeHelper.h" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32F4xxxx\StartupFiles\startup_stm32f407xx.c" />
     <None Include="$(BSP_ROOT)\FreeRTOS\License\license.txt" />
@@ -187,6 +190,7 @@
     <ClInclude Include="FreeRTOSConfig.h" />
     <ClInclude Include="GeneralProcess.h" />
     <ClInclude Include="OS\SystemOS.h" />
+    <ClInclude Include="Peripheral\Button.h" />
     <ClInclude Include="stm32f4xx_hal_conf.h" />
     <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\include\croutine.h" />
     <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\include\deprecated_definitions.h" />

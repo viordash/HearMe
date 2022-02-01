@@ -1,28 +1,47 @@
 
 #include "Board.h"
 #include "GeneralProcess.h"
+#include "Button.h"
 
 TGeneralProcess GeneralProcess;
 
 void InitGeneralProcess() {
 	memset(&GeneralProcess, 0, sizeof(GeneralProcess));
+	InitButton();
 }
 
 void TaskGeneralProcess(void *arg) {
 	GeneralProcess.timers.timerHeartbeat = SysTickCount - SYSTICK_mS(2000);
 
 	while (true) {
+		switch (ButtonPeriodic()) {
+			case TButtonState::Pressed:
+				SetPortPin(LED_BLUE_PORT, LED_BLUE_PIN);
+				break;
+			case TButtonState::Released:
+				ResetPortPin(LED_BLUE_PORT, LED_BLUE_PIN);
+				break;
 
-		SetPortPin(GPIOD, GPIO_PIN_15);
+			case TButtonState::OnKeyDown:
+				TogglePortPin(LED_ORANGE_PORT, LED_ORANGE_PIN);
+				break;
 
-		TaskSleep(SYSTICK_mS(200));
+			case TButtonState::ShortPress:
+				TogglePortPin(LED_RED_PORT, LED_RED_PIN);
+				break;
 
-		ResetPortPin(GPIOD, GPIO_PIN_15);
+			case TButtonState::MidPress:
+				TogglePortPin(LED_GREEN_PORT, LED_GREEN_PIN);
+				break;
 
-		TaskSleep(SYSTICK_mS(200));
+			case TButtonState::LongPress:
+				//				TogglePortPin(LED_BLUE_PORT, LED_BLUE_PIN);
+				break;
 
-		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+			default:
+				break;
+		}
 
-		TaskSleep(SYSTICK_mS(50));
+		TaskSleep(SYSTICK_mS(1));
 	}
 }
