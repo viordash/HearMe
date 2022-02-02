@@ -22,10 +22,10 @@ TLeds ButtonsLeds;
 #define TIM_RELOAD_VALUE_FOR_1S (HAL_RCC_GetPCLK1Freq() * 2 / (TIM4->PSC + 1) / (TIM4->ARR + 1))
 
 void InitLeds() {
-	TIM_HandleTypeDef htim4 = {0};
-	TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-	TIM_MasterConfigTypeDef sMasterConfig = {0};
-	TIM_OC_InitTypeDef sConfigOC = {0};
+	TIM_HandleTypeDef htim4 = {};
+	TIM_ClockConfigTypeDef sClockSourceConfig = {};
+	TIM_MasterConfigTypeDef sMasterConfig = {};
+	TIM_OC_InitTypeDef sConfigOC = {};
 
 	htim4.Instance = TIM4;
 	htim4.Init.Prescaler = 15;
@@ -80,7 +80,7 @@ void InitLeds() {
 }
 
 void StartLeds() {
-	TIM_HandleTypeDef htim4;
+	TIM_HandleTypeDef htim4 = {};
 	htim4.Instance = TIM4;
 	if (HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1) != HAL_OK) {
 		Error_Handler();

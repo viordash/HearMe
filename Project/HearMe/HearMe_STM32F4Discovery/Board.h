@@ -14,6 +14,7 @@
 
 #define LED_ORANGE_PIN GPIO_PIN_13
 #define LED_ORANGE_PORT GPIOD
+#define LEDS_AF GPIO_AF2_TIM4
 
 #define LED_GREEN_PIN GPIO_PIN_12
 #define LED_GREEN_PORT GPIOD
@@ -26,6 +27,15 @@
 
 #define BUTTON_PIN GPIO_PIN_0
 #define BUTTON_PORT GPIOA
+
+#define SPI_SCK_PIN GPIO_PIN_10
+#define SPI_SCK_GPIO_PORT GPIOB
+#define SPI_SCK_AF GPIO_AF5_SPI2
+
+#define SPI_MOSI_PIN GPIO_PIN_3
+#define SPI_MOSI_GPIO_PORT GPIOC
+#define SPI_MOSI_AF GPIO_AF5_SPI2
+
 
 #define ReadPortPin(port, pin) ((port->IDR & pin) == pin)
 

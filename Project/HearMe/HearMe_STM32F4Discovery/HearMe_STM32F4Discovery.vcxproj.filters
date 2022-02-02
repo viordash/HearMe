@@ -822,6 +822,9 @@
     <ClCompile Include="Peripheral\Leds.cpp">
       <Filter>Peripheral</Filter>
     </ClCompile>
+    <ClCompile Include="Peripheral\I2SPdmAudioIn.cpp">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -842,5 +845,16 @@
     <ClInclude Include="Peripheral\Leds.h">
       <Filter>Peripheral</Filter>
     </ClInclude>
+    <ClInclude Include="Peripheral\I2SPdmAudioIn.h">
+      <Filter>Peripheral</Filter>
+    </ClInclude>
+    <ClInclude Include="Peripheral\pdm_filter.h">
+      <Filter>Peripheral</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Peripheral\libPDMFilter_GCC.a">
+      <Filter>Peripheral</Filter>
+    </Library>
   </ItemGroup>
 </Project>

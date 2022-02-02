@@ -55,15 +55,17 @@ void BoardInit(void) {
 
 void GpioInit() {
 	__GPIOA_CLK_ENABLE();
+	__GPIOB_CLK_ENABLE();
+	__GPIOC_CLK_ENABLE();
 	__GPIOD_CLK_ENABLE();
 
-	GPIO_InitTypeDef gpio;
+	GPIO_InitTypeDef gpio = {};
 
 	gpio.Mode = GPIO_MODE_AF_PP;
 	gpio.Speed = GPIO_SPEED_FREQ_HIGH;
 	gpio.Pull = GPIO_NOPULL;
 	gpio.Pin = LED_BLUE_PIN;
-	gpio.Alternate = GPIO_AF2_TIM4;
+	gpio.Alternate = LEDS_AF;
 	HAL_GPIO_Init(LED_BLUE_PORT, &gpio);
 	gpio.Pin = LED_RED_PIN;
 	HAL_GPIO_Init(LED_RED_PORT, &gpio);
@@ -76,6 +78,15 @@ void GpioInit() {
 	gpio.Pull = GPIO_PULLDOWN;
 	gpio.Pin = BUTTON_PIN;
 	HAL_GPIO_Init(BUTTON_PORT, &gpio);
+
+	gpio.Mode = GPIO_MODE_AF_PP;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+	gpio.Pin = SPI_SCK_PIN;
+	gpio.Alternate = SPI_SCK_AF;
+	HAL_GPIO_Init(SPI_SCK_GPIO_PORT, &gpio);
+	gpio.Pin = SPI_MOSI_PIN;
+	HAL_GPIO_Init(SPI_MOSI_GPIO_PORT, &gpio);
 }
 
 #ifdef __cplusplus
@@ -106,6 +117,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
 	//	if (huart->Instance == USART2) {
 	//		InitUart2Msp(huart);
 	//	}
+}
+
+void HAL_I2S_MspInit(I2S_HandleTypeDef *hi2s) {
 }
 
 #ifdef __cplusplus
