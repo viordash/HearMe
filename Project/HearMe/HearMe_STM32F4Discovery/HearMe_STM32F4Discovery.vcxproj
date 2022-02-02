@@ -81,8 +81,10 @@
     <ClCompile Include="HearMe_STM32F4Discovery.cpp" />
     <ClCompile Include="OS\SystemOS.cpp" />
     <ClCompile Include="Peripheral\Button.cpp" />
+    <ClCompile Include="Peripheral\Leds.cpp" />
     <ClCompile Include="system_stm32f4xx.c" />
     <ClCompile Include="Utils\TimeHelper.cpp" />
+    <ClInclude Include="Peripheral\Leds.h" />
     <ClInclude Include="Utils\TimeHelper.h" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32F4xxxx\StartupFiles\startup_stm32f407xx.c" />

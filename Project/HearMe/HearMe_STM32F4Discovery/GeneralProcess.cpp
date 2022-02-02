@@ -2,40 +2,43 @@
 #include "Board.h"
 #include "GeneralProcess.h"
 #include "Button.h"
+#include "Leds.h"
 
 TGeneralProcess GeneralProcess;
 
 void InitGeneralProcess() {
 	memset(&GeneralProcess, 0, sizeof(GeneralProcess));
 	InitButton();
+	InitLeds();
 }
 
 void TaskGeneralProcess(void *arg) {
+	StartLeds();
 	GeneralProcess.timers.timerHeartbeat = SysTickCount - SYSTICK_mS(2000);
 
 	while (true) {
 		switch (ButtonPeriodic()) {
 			case TButtonState::Pressed:
-				SetPortPin(LED_BLUE_PORT, LED_BLUE_PIN);
+				ChangeBlueLed(TLedMode::Br50);
 				break;
 			case TButtonState::Released:
-				ResetPortPin(LED_BLUE_PORT, LED_BLUE_PIN);
+				ChangeBlueLed(TLedMode::Br1);
 				break;
 
 			case TButtonState::OnKeyDown:
-				TogglePortPin(LED_ORANGE_PORT, LED_ORANGE_PIN);
+				ChangeRedLed(TLedMode::Pulse);
 				break;
 
 			case TButtonState::ShortPress:
-				TogglePortPin(LED_RED_PORT, LED_RED_PIN);
+				ChangeOrangeLed(TLedMode::Flash);
 				break;
 
 			case TButtonState::MidPress:
-				TogglePortPin(LED_GREEN_PORT, LED_GREEN_PIN);
+				ChangeOrangeLed(TLedMode::FastFlash);
 				break;
 
 			case TButtonState::LongPress:
-				//				TogglePortPin(LED_BLUE_PORT, LED_BLUE_PIN);
+				ChangeGreenLed(TLedMode::FastFastFlash);
 				break;
 
 			default:

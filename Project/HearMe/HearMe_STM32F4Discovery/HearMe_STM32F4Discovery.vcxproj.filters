@@ -819,6 +819,9 @@
     <ClCompile Include="Utils\TimeHelper.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Peripheral\Leds.cpp">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -835,6 +838,9 @@
     </ClInclude>
     <ClInclude Include="Utils\TimeHelper.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Peripheral\Leds.h">
+      <Filter>Peripheral</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

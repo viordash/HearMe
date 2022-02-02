@@ -56,14 +56,14 @@ void BoardInit(void) {
 void GpioInit() {
 	__GPIOA_CLK_ENABLE();
 	__GPIOD_CLK_ENABLE();
-	
+
 	GPIO_InitTypeDef gpio;
 
-	gpio.Mode = GPIO_MODE_OUTPUT_PP;
+	gpio.Mode = GPIO_MODE_AF_PP;
 	gpio.Speed = GPIO_SPEED_FREQ_HIGH;
 	gpio.Pull = GPIO_NOPULL;
-
 	gpio.Pin = LED_BLUE_PIN;
+	gpio.Alternate = GPIO_AF2_TIM4;
 	HAL_GPIO_Init(LED_BLUE_PORT, &gpio);
 	gpio.Pin = LED_RED_PIN;
 	HAL_GPIO_Init(LED_RED_PORT, &gpio);
@@ -77,3 +77,37 @@ void GpioInit() {
 	gpio.Pin = BUTTON_PIN;
 	HAL_GPIO_Init(BUTTON_PORT, &gpio);
 }
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim) {
+	if (htim->Instance == TIM4) {
+		__HAL_RCC_TIM4_CLK_ENABLE();
+	}
+}
+
+void HAL_MspInit(void) {
+	__HAL_RCC_SYSCFG_CLK_ENABLE();
+	__HAL_RCC_PWR_CLK_ENABLE();
+}
+
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim_pwm) {
+	if (htim_pwm->Instance == TIM4) {
+		__HAL_RCC_TIM4_CLK_ENABLE();
+	}
+}
+
+void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
+	//	if (huart->Instance == USART3) {
+	//		InitUart3Msp(huart);
+	//	}
+	//	if (huart->Instance == USART2) {
+	//		InitUart2Msp(huart);
+	//	}
+}
+
+#ifdef __cplusplus
+}
+#endif
