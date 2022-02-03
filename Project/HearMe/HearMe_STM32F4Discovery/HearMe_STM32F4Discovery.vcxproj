@@ -69,15 +69,11 @@
       <ARMCPU>cortex-m4</ARMCPU>
     </ToolchainSettingsContainer>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <Library Include="Peripheral\libPDMFilter_GCC.a" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
-    <ClCompile Include="C:\Users\ViorIDE\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.c" />
     <ClCompile Include="GeneralProcess.cpp" />
     <ClCompile Include="HearMe_STM32F4Discovery.cpp" />
     <ClCompile Include="OS\SystemOS.cpp" />
@@ -342,5 +338,11 @@
     <None Include="stm32.xml" />
     <ClCompile Include="$(BSP_ROOT)\FreeRTOS\Source\portable\GCC\ARM_CM4F\port.c" />
     <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\portable\GCC\ARM_CM4F\portmacro.h" />
+    <ClCompile Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.c" />
+    <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os.h" />
+    <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Peripheral\libPDMFilter_IAR.a" />
   </ItemGroup>
 </Project>

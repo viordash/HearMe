@@ -3,6 +3,7 @@
 #include "GeneralProcess.h"
 #include "Button.h"
 #include "Leds.h"
+#include "I2SPdmAudioIn.h"
 
 TGeneralProcess GeneralProcess;
 
@@ -10,12 +11,14 @@ void InitGeneralProcess() {
 	memset(&GeneralProcess, 0, sizeof(GeneralProcess));
 	InitButton();
 	InitLeds();
+	InitPdmAudioIn();
 }
 
 void TaskGeneralProcess(void *arg) {
 	StartLeds();
 	GeneralProcess.timers.timerHeartbeat = SysTickCount - SYSTICK_mS(2000);
 
+	bool d = false;
 	while (true) {
 		switch (ButtonPeriodic()) {
 			case TButtonState::Pressed:
@@ -30,11 +33,18 @@ void TaskGeneralProcess(void *arg) {
 				break;
 
 			case TButtonState::ShortPress:
-				ChangeOrangeLed(TLedMode::Flash);
+				d = !d;
+				if (d) {
+					ChangeOrangeLed(TLedMode::FastFlash);
+					StartPdmAudioIn();
+				} else {
+					ChangeOrangeLed(TLedMode::Off);
+					StopPdmAudioIn();
+				}
+
 				break;
 
 			case TButtonState::MidPress:
-				ChangeOrangeLed(TLedMode::FastFlash);
 				break;
 
 			case TButtonState::LongPress:

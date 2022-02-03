@@ -801,9 +801,6 @@
     <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\portable\GCC\ARM_CM4F\portmacro.h">
       <Filter>Header files\Device-specific files\FreeRTOS</Filter>
     </ClInclude>
-    <ClCompile Include="C:\Users\ViorIDE\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.c">
-      <Filter>Source files\Device-specific files\FreeRTOS</Filter>
-    </ClCompile>
     <ClCompile Include="Board.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
@@ -825,6 +822,15 @@
     <ClCompile Include="Peripheral\I2SPdmAudioIn.cpp">
       <Filter>Peripheral</Filter>
     </ClCompile>
+    <ClCompile Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.c">
+      <Filter>Source files\Device-specific files\FreeRTOS</Filter>
+    </ClCompile>
+    <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os.h">
+      <Filter>Header files\Device-specific files\FreeRTOS</Filter>
+    </ClInclude>
+    <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.h">
+      <Filter>Header files\Device-specific files\FreeRTOS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -853,7 +859,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Peripheral\libPDMFilter_GCC.a">
+    <Library Include="Peripheral\libPDMFilter_IAR.a">
       <Filter>Peripheral</Filter>
     </Library>
   </ItemGroup>
