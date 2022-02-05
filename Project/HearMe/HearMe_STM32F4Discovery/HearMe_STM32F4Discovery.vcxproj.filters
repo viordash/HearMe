@@ -831,6 +831,12 @@
     <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.h">
       <Filter>Header files\Device-specific files\FreeRTOS</Filter>
     </ClInclude>
+    <ClCompile Include="Peripheral\I2SAudioOut.cpp">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
+    <ClCompile Include="Peripheral\audio_sample.c">
+      <Filter>Peripheral</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -855,6 +861,9 @@
       <Filter>Peripheral</Filter>
     </ClInclude>
     <ClInclude Include="Peripheral\pdm_filter.h">
+      <Filter>Peripheral</Filter>
+    </ClInclude>
+    <ClInclude Include="Peripheral\I2SAudioOut.h">
       <Filter>Peripheral</Filter>
     </ClInclude>
   </ItemGroup>

@@ -43,6 +43,7 @@ void InitPdmAudioIn() {
 	//	/* Set the local parameters */
 	//	AudioRecBitRes = BitRes;
 	//	AudioRecChnlNbr = ChnlNbr;
+
 }
 
 void StartPdmAudioIn() {
@@ -87,7 +88,7 @@ static void SPI_Init(uint32_t audioFreq) {
 
 uint16_t app;
 
-extern "C" void SPI2_IRQHandler(void) {
+extern "C" void SPI2_IRQHandler() {
 	I2S_HandleTypeDef hi2s2;
 	hi2s2.Instance = SPI2;
 	I2S_HandleTypeDef *hi2s = &hi2s2;

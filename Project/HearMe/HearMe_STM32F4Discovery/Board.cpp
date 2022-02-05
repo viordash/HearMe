@@ -93,6 +93,42 @@ void GpioInit() {
 	HAL_GPIO_Init(SPI_SCK_GPIO_PORT, &gpio);
 	gpio.Pin = SPI_MOSI_PIN;
 	HAL_GPIO_Init(SPI_MOSI_GPIO_PORT, &gpio);
+
+	gpio.Mode = GPIO_MODE_OUTPUT_PP;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+	gpio.Pin = AUDIO_RESET_PIN;
+	HAL_GPIO_Init(AUDIO_RESET_PORT, &gpio);
+
+	gpio.Mode = GPIO_MODE_AF_OD;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+	gpio.Pin = CODEC_I2C_SCL_PIN;
+	gpio.Alternate = CODEC_I2C_SCL_AF;
+	HAL_GPIO_Init(CODEC_I2C_SCL_PORT, &gpio);
+	gpio.Pin = CODEC_I2C_SDA_PIN;
+	gpio.Alternate = CODEC_I2C_SDA_AF;
+	HAL_GPIO_Init(CODEC_I2C_SDA_PORT, &gpio);
+
+	gpio.Mode = GPIO_MODE_AF_PP;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+	gpio.Pin = CODEC_I2S_SCK_PIN;
+	gpio.Alternate = CODEC_I2S_SCK_AF;
+	HAL_GPIO_Init(CODEC_I2S_SCK_PORT, &gpio);
+	gpio.Pin = CODEC_I2S_SD_PIN;
+	gpio.Alternate = CODEC_I2S_SD_AF;
+	HAL_GPIO_Init(CODEC_I2S_SD_PORT, &gpio);
+	gpio.Pin = CODEC_I2S_WS_PIN;
+	gpio.Alternate = CODEC_I2S_WS_AF;
+	HAL_GPIO_Init(CODEC_I2S_WS_PORT, &gpio);
+
+	gpio.Mode = GPIO_MODE_AF_PP;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+	gpio.Pin = CODEC_I2S_MCK_PIN;
+	gpio.Alternate = CODEC_I2S_MCK_AF;
+	HAL_GPIO_Init(CODEC_I2S_MCK_PORT, &gpio);
 }
 
 #ifdef __cplusplus

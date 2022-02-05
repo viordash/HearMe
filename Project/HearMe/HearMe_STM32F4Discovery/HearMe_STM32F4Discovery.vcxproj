@@ -77,11 +77,14 @@
     <ClCompile Include="GeneralProcess.cpp" />
     <ClCompile Include="HearMe_STM32F4Discovery.cpp" />
     <ClCompile Include="OS\SystemOS.cpp" />
+    <ClCompile Include="Peripheral\audio_sample.c" />
     <ClCompile Include="Peripheral\Button.cpp" />
+    <ClCompile Include="Peripheral\I2SAudioOut.cpp" />
     <ClCompile Include="Peripheral\I2SPdmAudioIn.cpp" />
     <ClCompile Include="Peripheral\Leds.cpp" />
     <ClCompile Include="system_stm32f4xx.c" />
     <ClCompile Include="Utils\TimeHelper.cpp" />
+    <ClInclude Include="Peripheral\I2SAudioOut.h" />
     <ClInclude Include="Peripheral\I2SPdmAudioIn.h" />
     <ClInclude Include="Peripheral\Leds.h" />
     <ClInclude Include="Peripheral\pdm_filter.h" />

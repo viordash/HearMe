@@ -4,14 +4,22 @@
 #include "Button.h"
 #include "Leds.h"
 #include "I2SPdmAudioIn.h"
+#include "I2SAudioOut.h"
 
 TGeneralProcess GeneralProcess;
+
+extern uint16_t AUDIO_SAMPLE[];
+/* Audio file size and start address are defined here since the audio file is
+	stored in Flash memory as a constant table of 16-bit data */
+#define AUDIO_FILE_SIZE 990000
+#define AUIDO_START_ADDRESS 58 /* Offset relative to audio file header size */
 
 void InitGeneralProcess() {
 	memset(&GeneralProcess, 0, sizeof(GeneralProcess));
 	InitButton();
 	InitLeds();
 	InitPdmAudioIn();
+	InitAudioOut();
 }
 
 void TaskGeneralProcess(void *arg) {
@@ -23,6 +31,7 @@ void TaskGeneralProcess(void *arg) {
 		switch (ButtonPeriodic()) {
 			case TButtonState::Pressed:
 				ChangeBlueLed(TLedMode::Br50);
+
 				break;
 			case TButtonState::Released:
 				ChangeBlueLed(TLedMode::Br1);
@@ -36,10 +45,12 @@ void TaskGeneralProcess(void *arg) {
 				d = !d;
 				if (d) {
 					ChangeOrangeLed(TLedMode::FastFlash);
-					StartPdmAudioIn();
+//					StartPdmAudioIn();
+					StartAudioOut((uint16_t *)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), AUDIO_FILE_SIZE - AUIDO_START_ADDRESS);
 				} else {
 					ChangeOrangeLed(TLedMode::Off);
-					StopPdmAudioIn();
+//					StopPdmAudioIn();
+					StopAudioOut(TCodecPowerdown::CODEC_PDWN_SW);
 				}
 
 				break;
