@@ -22,6 +22,7 @@ typedef void (*TaskSleepCb)(uint32_t);
 		while (i--)                                                                                                                                            \
 			__NOP();                                                                                                                                           \
 	}
+
 #define Delay_uS(ACount_uS)                                                                                                                                    \
 	{                                                                                                                                                          \
 		DWORD i = (SystemCoreClock / 1000000) * ACount_uS;                                                                                                     \

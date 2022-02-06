@@ -5,13 +5,10 @@
 #include "Leds.h"
 #include "I2SPdmAudioIn.h"
 #include "I2SAudioOut.h"
+#include "AudioSample.h"
 
 TGeneralProcess GeneralProcess;
 
-extern uint16_t AUDIO_SAMPLE[];
-/* Audio file size and start address are defined here since the audio file is
-	stored in Flash memory as a constant table of 16-bit data */
-#define AUDIO_FILE_SIZE 990000
 #define AUIDO_START_ADDRESS 58 /* Offset relative to audio file header size */
 
 void InitGeneralProcess() {
@@ -45,12 +42,12 @@ void TaskGeneralProcess(void *arg) {
 				d = !d;
 				if (d) {
 					ChangeOrangeLed(TLedMode::FastFlash);
-//					StartPdmAudioIn();
-					StartAudioOut((uint16_t *)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), AUDIO_FILE_SIZE - AUIDO_START_ADDRESS, 90, true);
+					//					StartPdmAudioIn();
+					StartAudioOut((uint16_t *)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), sizeof(AUDIO_SAMPLE) - AUIDO_START_ADDRESS, 80, true);
 				} else {
 					ChangeOrangeLed(TLedMode::Off);
-//					StopPdmAudioIn();
-					StopAudioOut(TCodecPowerdown::CODEC_PDWN_SW);
+					//					StopPdmAudioIn();
+					StopAudioOut();
 				}
 
 				break;

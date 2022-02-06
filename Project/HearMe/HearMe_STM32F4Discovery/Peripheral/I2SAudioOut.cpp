@@ -63,14 +63,13 @@ static void Codec_AudioInterface_Init(uint32_t audioFreq);
 static void Audio_MAL_Init();
 static void Audio_MAL_PauseResume(uint32_t cmd, uint32_t addr);
 static void Codec_Mute(TCodecAudioMute cmd);
-static void Codec_Stop(TCodecPowerdown powerdown);
+static void Codec_Stop();
 static void DmaTransmit(uint16_t *pData, uint16_t size);
 
 void InitAudioOut() {
 	memset(&AudioOut, 0, sizeof(AudioOut));
 
-	Codec_Reset();
-	Codec_Init(OUTPUT_DEVICE_AUTO, I2S_AUDIOFREQ_48K);
+	Codec_Init(OUTPUT_DEVICE_AUTO, I2S_AUDIOFREQ_16K);
 	Audio_MAL_Init();
 }
 
@@ -87,8 +86,8 @@ void StartAudioOut(uint16_t *pData, uint32_t size, uint8_t volume, bool circular
 	AudioOut.Codec.CurrentPos = pData + DMA_MAX(size); /* Update the current audio pointer position */
 }
 
-void StopAudioOut(TCodecPowerdown powerdown) {
-	Codec_Stop(powerdown);
+void StopAudioOut() {
+	Codec_Stop();
 	HAL_I2S_DMAStop(&AudioOut.hi2s);
 	AudioOut.Codec.RemainingSize = AudioOut.Codec.TotalSize; /* Update the remaining data number */
 }
@@ -224,19 +223,9 @@ static void Codec_Mute(TCodecAudioMute cmd) {
 	}
 }
 
-static void Codec_Stop(TCodecPowerdown powerdown) {
-	Codec_Mute(AUDIO_MUTE_ON); /* Mute the output first */
-	switch (powerdown) {
-		case TCodecPowerdown::CODEC_PDWN_SW:
-			Codec_WriteRegister(0x02, 0x9F);
-			break;
-		case TCodecPowerdown::CODEC_PDWN_HW:
-			/* Power down the DAC components */
-			Codec_WriteRegister(0x02, 0x9F);
-			Delay(0xFFF); /* Wait at least 100us */
-						  //			WritePortPin(AUDIO_RESET_PORT, AUDIO_RESET_PIN, false); /* Power Down the codec */
-			break;
-	}
+static void Codec_Stop() {
+	Codec_Mute(AUDIO_MUTE_ON);		 /* Mute the output first */
+	Codec_WriteRegister(0x02, 0x9F); /* Power down the DAC components */
 }
 
 static void DmaTransmit(uint16_t *pData, uint16_t size) {
