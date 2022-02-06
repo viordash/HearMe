@@ -11,5 +11,5 @@ typedef enum { //
 } TCodecAudioMute;
 
 void InitAudioOut();
-void StartAudioOut(uint16_t *pData, uint32_t size);
+void StartAudioOut(uint16_t *pData, uint32_t size, uint8_t volume, bool circularPlay);
 void StopAudioOut(TCodecPowerdown powerdown);

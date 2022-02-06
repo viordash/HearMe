@@ -35,9 +35,10 @@ static const uint8_t flagBitshiftOffset[8U] = {0U, 6U, 16U, 22U, 0U, 6U, 16U, 22
 
 typedef struct {
 	uint32_t TotalSize;
-	uint32_t RemainingSize;
+	int32_t RemainingSize;
 	uint16_t *CurrentPos;
 	uint8_t OutputDev;
+	bool CircularPlay;
 } TAudioOutCodec, *PTAudioOutCodec;
 
 typedef struct {
@@ -56,7 +57,7 @@ static void Codec_Reset();
 static void Delay(uint32_t nCount);
 static void Codec_CtrlInterface_Init();
 static bool Codec_WriteRegister(uint8_t registerAddr, uint8_t registerValue);
-static void Codec_Init(uint16_t outputDevice, uint8_t volume, uint32_t audioFreq);
+static void Codec_Init(uint16_t outputDevice, uint32_t audioFreq);
 static void Codec_VolumeCtrl(uint8_t volume);
 static void Codec_AudioInterface_Init(uint32_t audioFreq);
 static void Audio_MAL_Init();
@@ -69,15 +70,19 @@ void InitAudioOut() {
 	memset(&AudioOut, 0, sizeof(AudioOut));
 
 	Codec_Reset();
-	uint8_t volume = 70;
-	Codec_Init(OUTPUT_DEVICE_AUTO, VOLUME_CONVERT(volume), I2S_AUDIOFREQ_16K);
+	Codec_Init(OUTPUT_DEVICE_AUTO, I2S_AUDIOFREQ_48K);
 	Audio_MAL_Init();
 }
 
-void StartAudioOut(uint16_t *pData, uint32_t size) {
-	AudioOut.Codec.TotalSize = size;
+void StartAudioOut(uint16_t *pData, uint32_t size, uint8_t volume, bool circularPlay) {
+	Codec_Mute(AUDIO_MUTE_OFF); /* Unmute the output first */
+	Codec_WriteRegister(0x04, AudioOut.Codec.OutputDev);
+	Codec_WriteRegister(0x02, 0x9E);		  /* Exit the Power save mode */
+	Codec_VolumeCtrl(VOLUME_CONVERT(volume)); /* Set the Master volume */
+
+	AudioOut.Codec.CircularPlay = circularPlay;
+	AudioOut.Codec.TotalSize = size / 2;
 	DmaTransmit(pData, (uint16_t)(DMA_MAX((size / 2) / 4)));
-	//	HAL_I2S_Transmit_DMA(&AudioOut.hi2s, pData, (uint32_t)(DMA_MAX((size / 2) / 4)));
 	AudioOut.Codec.RemainingSize = (size / 2) - DMA_MAX(size);
 	AudioOut.Codec.CurrentPos = pData + DMA_MAX(size); /* Update the current audio pointer position */
 }
@@ -130,17 +135,16 @@ static bool Codec_WriteRegister(uint8_t registerAddr, uint8_t registerValue) {
 	return registerValue == readedVal ? 0 : 1;
 }
 
-static void Codec_Init(uint16_t outputDevice, uint8_t volume, uint32_t audioFreq) {
+static void Codec_Init(uint16_t outputDevice, uint32_t audioFreq) {
 	Codec_Reset();				/* Reset the Codec Registers */
 	Codec_CtrlInterface_Init(); /* Initialize the Control interface of the Audio Codec */
 
 	Codec_WriteRegister(0x02, 0x01); /* Keep Codec powered OFF */
-	Codec_WriteRegister(0x04, 0xAF); /* SPK always OFF & HP always ON */
 	AudioOut.Codec.OutputDev = 0xAF;
-	Codec_WriteRegister(0x05, 0x81);		   /* Clock configuration: Auto detection */
-	Codec_WriteRegister(0x06, CODEC_STANDARD); /* Set the Slave Mode and the audio Standard */
-	Codec_VolumeCtrl(volume);				   /* Set the Master volume */
-	Codec_WriteRegister(0x02, 0x9E);		   /* Power on the Codec */
+	Codec_WriteRegister(0x04, AudioOut.Codec.OutputDev); /* SPK always OFF & HP always ON */
+	Codec_WriteRegister(0x05, 0x81);					 /* Clock configuration: Auto detection */
+	Codec_WriteRegister(0x06, CODEC_STANDARD);			 /* Set the Slave Mode and the audio Standard */
+	Codec_WriteRegister(0x02, 0x9E);					 /* Power on the Codec */
 
 	/* Additional configuration for the CODEC. These configurations are done to reduce
 		the time needed for the Codec to power off. If these configurations are removed,
@@ -229,8 +233,8 @@ static void Codec_Stop(TCodecPowerdown powerdown) {
 		case TCodecPowerdown::CODEC_PDWN_HW:
 			/* Power down the DAC components */
 			Codec_WriteRegister(0x02, 0x9F);
-			Delay(0xFFF);											/* Wait at least 100us */
-			WritePortPin(AUDIO_RESET_PORT, AUDIO_RESET_PIN, false); /* Power Down the codec */
+			Delay(0xFFF); /* Wait at least 100us */
+						  //			WritePortPin(AUDIO_RESET_PORT, AUDIO_RESET_PIN, false); /* Power Down the codec */
 			break;
 	}
 }
@@ -267,6 +271,11 @@ extern "C" void DMA1_Stream7_IRQHandler(void) {
 		AUDIO_I2S_DMA_STREAM->CR &= ~(DMA_IT_TC | DMA_IT_TE | DMA_IT_DME);   /* Disable all the transfer interrupts */
 		AUDIO_I2S_DMA_STREAM->FCR &= ~(DMA_IT_FE);
 		regs->IFCR = DMA_FLAG_TCIF0_4 << txDmaStreamIndex; /* Clear the transfer complete flag */
+
+		if (AudioOut.Codec.CircularPlay && AudioOut.Codec.RemainingSize <= 0) {
+			AudioOut.Codec.CurrentPos -= AudioOut.Codec.TotalSize;
+			AudioOut.Codec.RemainingSize = AudioOut.Codec.TotalSize;
+		}
 
 		if (AudioOut.Codec.RemainingSize > 0) {
 			DmaTransmit(AudioOut.Codec.CurrentPos, DMA_MAX(AudioOut.Codec.RemainingSize));

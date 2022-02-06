@@ -46,7 +46,7 @@ void TaskGeneralProcess(void *arg) {
 				if (d) {
 					ChangeOrangeLed(TLedMode::FastFlash);
 //					StartPdmAudioIn();
-					StartAudioOut((uint16_t *)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), AUDIO_FILE_SIZE - AUIDO_START_ADDRESS);
+					StartAudioOut((uint16_t *)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), AUDIO_FILE_SIZE - AUIDO_START_ADDRESS, 90, true);
 				} else {
 					ChangeOrangeLed(TLedMode::Off);
 //					StopPdmAudioIn();
