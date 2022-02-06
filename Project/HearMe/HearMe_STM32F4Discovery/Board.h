@@ -63,6 +63,12 @@
 #define CODEC_I2S_WS_PORT GPIOA
 #define CODEC_I2S_WS_AF GPIO_AF6_SPI3
 
+#define TEST1_PIN GPIO_PIN_1
+#define TEST1_PORT GPIOC
+
+#define TEST2_PIN GPIO_PIN_2
+#define TEST2_PORT GPIOC
+
 #define ReadPortPin(port, pin) ((port->IDR & pin) == pin)
 
 #define WritePortPin(port, pin, value)                                                                                                                         \

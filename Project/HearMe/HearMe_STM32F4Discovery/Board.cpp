@@ -129,6 +129,14 @@ void GpioInit() {
 	gpio.Pin = CODEC_I2S_MCK_PIN;
 	gpio.Alternate = CODEC_I2S_MCK_AF;
 	HAL_GPIO_Init(CODEC_I2S_MCK_PORT, &gpio);
+
+	gpio.Mode = GPIO_MODE_OUTPUT_PP;
+	gpio.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+	gpio.Pull = GPIO_NOPULL;
+	gpio.Pin = TEST1_PIN;
+	HAL_GPIO_Init(TEST1_PORT, &gpio);
+	gpio.Pin = TEST2_PIN;
+	HAL_GPIO_Init(TEST2_PORT, &gpio);
 }
 
 #ifdef __cplusplus
