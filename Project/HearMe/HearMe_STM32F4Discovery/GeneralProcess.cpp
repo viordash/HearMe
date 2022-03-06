@@ -42,12 +42,12 @@ void TaskGeneralProcess(void *arg) {
 				d = !d;
 				if (d) {
 					ChangeOrangeLed(TLedMode::FastFlash);
-					//					StartPdmAudioIn();
-					StartAudioOut((uint16_t *)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), sizeof(AUDIO_SAMPLE) - AUIDO_START_ADDRESS, 80, true);
+					StartPdmAudioIn();
+					//					StartAudioOut((uint16_t *)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), sizeof(AUDIO_SAMPLE) - AUIDO_START_ADDRESS, 80, true);
 				} else {
 					ChangeOrangeLed(TLedMode::Off);
-					//					StopPdmAudioIn();
-					StopAudioOut();
+					StopPdmAudioIn();
+//					StopAudioOut();
 				}
 
 				break;

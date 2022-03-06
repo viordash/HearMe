@@ -69,7 +69,7 @@ static void DmaTransmit(uint16_t *pData, uint16_t size);
 void InitAudioOut() {
 	memset(&AudioOut, 0, sizeof(AudioOut));
 
-	Codec_Init(OUTPUT_DEVICE_AUTO, I2S_AUDIOFREQ_16K);
+	Codec_Init(OUTPUT_DEVICE_AUTO, 7500);
 	Audio_MAL_Init();
 }
 
@@ -79,7 +79,10 @@ void StartAudioOut(uint16_t *pData, uint32_t size, uint8_t volume, bool circular
 	Codec_WriteRegister(0x02, 0x9E);		  /* Exit the Power save mode */
 	Codec_VolumeCtrl(VOLUME_CONVERT(volume)); /* Set the Master volume */
 
-	AudioOut.Codec.CircularPlay = circularPlay;
+	PlayAudioOut(pData, size);
+}
+
+void PlayAudioOut(uint16_t *pData, uint32_t size) {
 	AudioOut.Codec.TotalSize = size / 2;
 	DmaTransmit(pData, (uint16_t)(DMA_MAX((size / 2) / 4)));
 	AudioOut.Codec.RemainingSize = (size / 2) - DMA_MAX(size);
@@ -208,7 +211,7 @@ static void Audio_MAL_Init() {
 
 	AUDIO_I2S_DMA_STREAM->PAR = (uint32_t) & (CODEC_I2S->DR); /* Configure DMA Channel source address */
 
-	HAL_NVIC_SetPriority(AUDIO_I2S_DMA_IRQ, 0, 0);
+	HAL_NVIC_SetPriority(AUDIO_I2S_DMA_IRQ, 2, 0);
 	HAL_NVIC_EnableIRQ(AUDIO_I2S_DMA_IRQ);
 }
 
@@ -230,6 +233,7 @@ static void Codec_Stop() {
 
 static void DmaTransmit(uint16_t *pData, uint16_t size) {
 	DMA_Base_Registers *regs = txDmaRegisters;
+//	SetPortPin(TEST1_PORT, TEST1_PIN);
 
 	AUDIO_I2S_DMA_STREAM->CR &= (uint32_t)(~DMA_SxCR_DBM);			   /* Clear DBM bit */
 	AUDIO_I2S_DMA_STREAM->CR &= ~DMA_SxCR_EN;						   /* Disable the peripheral */
@@ -271,5 +275,6 @@ extern "C" void DMA1_Stream7_IRQHandler(void) {
 			AudioOut.Codec.CurrentPos += DMA_MAX(AudioOut.Codec.RemainingSize);
 			AudioOut.Codec.RemainingSize -= DMA_MAX(AudioOut.Codec.RemainingSize);
 		}
+//		ResetPortPin(TEST1_PORT, TEST1_PIN);
 	}
 }

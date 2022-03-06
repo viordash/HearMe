@@ -95,7 +95,7 @@ void StartLeds() {
 		Error_Handler();
 	}
 	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_UPDATE);
-	HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(TIM4_IRQn, 15, 0);
 	HAL_NVIC_EnableIRQ(TIM4_IRQn);
 }
 

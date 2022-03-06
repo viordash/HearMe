@@ -795,9 +795,6 @@
     <None Include="stm32.xml">
       <Filter>VisualGDB settings</Filter>
     </None>
-    <ClCompile Include="$(BSP_ROOT)\FreeRTOS\Source\portable\GCC\ARM_CM4F\port.c">
-      <Filter>Source files\Device-specific files\FreeRTOS</Filter>
-    </ClCompile>
     <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\portable\GCC\ARM_CM4F\portmacro.h">
       <Filter>Header files\Device-specific files\FreeRTOS</Filter>
     </ClInclude>
@@ -834,6 +831,9 @@
     <ClCompile Include="Peripheral\I2SAudioOut.cpp">
       <Filter>Peripheral</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\ViorIDE\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c">
+      <Filter>Source files\Device-specific files\FreeRTOS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -868,7 +868,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Peripheral\libPDMFilter_IAR.a">
+    <Library Include="Peripheral\libPDMFilter_GCC.a">
       <Filter>Peripheral</Filter>
     </Library>
   </ItemGroup>
