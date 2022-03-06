@@ -19,10 +19,10 @@ static void SystemClock_Config(void) {
 	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
 	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-	RCC_OscInitStruct.PLL.PLLM = 4;
-	RCC_OscInitStruct.PLL.PLLN = 168;
+	RCC_OscInitStruct.PLL.PLLM = 8;
+	RCC_OscInitStruct.PLL.PLLN = 336;
 	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-	RCC_OscInitStruct.PLL.PLLQ = 4;
+	RCC_OscInitStruct.PLL.PLLQ = 7;
 	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
 		Error_Handler();
 	}
@@ -38,20 +38,22 @@ static void SystemClock_Config(void) {
 		Error_Handler();
 	}
 	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_I2S;
-	PeriphClkInitStruct.PLLI2S.PLLI2SN = 192;
-	PeriphClkInitStruct.PLLI2S.PLLI2SR = 2;
+	PeriphClkInitStruct.PLLI2S.PLLI2SN = 258;
+	PeriphClkInitStruct.PLLI2S.PLLI2SR = 3;
 	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
 		Error_Handler();
 	}
 }
 
 extern "C" void SysTick_Handler(void) {
-	HAL_IncTick();
-
 	if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED) {
 		/* Call tick handler */
 		xPortSysTickHandler();
 	}
+}
+
+extern "C" uint32_t HAL_GetTick(void) {
+	return SysTickCount;
 }
 
 void BoardInit(void) {
