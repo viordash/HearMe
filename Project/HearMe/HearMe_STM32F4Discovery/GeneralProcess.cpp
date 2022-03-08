@@ -15,8 +15,6 @@ void InitGeneralProcess() {
 	memset(&GeneralProcess, 0, sizeof(GeneralProcess));
 	InitButton();
 	InitLeds();
-	InitPdmAudioIn();
-	InitAudioOut();
 }
 
 void TaskGeneralProcess(void *arg) {
@@ -47,7 +45,7 @@ void TaskGeneralProcess(void *arg) {
 				} else {
 					ChangeOrangeLed(TLedMode::Off);
 					StopPdmAudioIn();
-//					StopAudioOut();
+					StopAudioOut();
 				}
 
 				break;

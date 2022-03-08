@@ -69,7 +69,7 @@ static void DmaTransmit(uint16_t *pData, uint16_t size);
 void InitAudioOut() {
 	memset(&AudioOut, 0, sizeof(AudioOut));
 
-	Codec_Init(OUTPUT_DEVICE_AUTO, 7500);
+	Codec_Init(OUTPUT_DEVICE_AUTO, 16000);
 	Audio_MAL_Init();
 }
 
@@ -79,14 +79,16 @@ void StartAudioOut(uint16_t *pData, uint32_t size, uint8_t volume, bool circular
 	Codec_WriteRegister(0x02, 0x9E);		  /* Exit the Power save mode */
 	Codec_VolumeCtrl(VOLUME_CONVERT(volume)); /* Set the Master volume */
 
+	AudioOut.Codec.CircularPlay = true;
 	PlayAudioOut(pData, size);
 }
 
 void PlayAudioOut(uint16_t *pData, uint32_t size) {
-	AudioOut.Codec.TotalSize = size / 2;
-	DmaTransmit(pData, (uint16_t)(DMA_MAX((size / 2) / 4)));
-	AudioOut.Codec.RemainingSize = (size / 2) - DMA_MAX(size);
-	AudioOut.Codec.CurrentPos = pData + DMA_MAX(size); /* Update the current audio pointer position */
+	size = size / 2;
+	AudioOut.Codec.TotalSize = size;
+	AudioOut.Codec.CurrentPos = pData;
+	DmaTransmit(pData, DMA_MAX(size));
+	AudioOut.Codec.RemainingSize = AudioOut.Codec.TotalSize - DMA_MAX(size);
 }
 
 void StopAudioOut() {
@@ -233,7 +235,6 @@ static void Codec_Stop() {
 
 static void DmaTransmit(uint16_t *pData, uint16_t size) {
 	DMA_Base_Registers *regs = txDmaRegisters;
-//	SetPortPin(TEST1_PORT, TEST1_PIN);
 
 	AUDIO_I2S_DMA_STREAM->CR &= (uint32_t)(~DMA_SxCR_DBM);			   /* Clear DBM bit */
 	AUDIO_I2S_DMA_STREAM->CR &= ~DMA_SxCR_EN;						   /* Disable the peripheral */
@@ -271,10 +272,11 @@ extern "C" void DMA1_Stream7_IRQHandler(void) {
 		}
 
 		if (AudioOut.Codec.RemainingSize > 0) {
-			DmaTransmit(AudioOut.Codec.CurrentPos, DMA_MAX(AudioOut.Codec.RemainingSize));
 			AudioOut.Codec.CurrentPos += DMA_MAX(AudioOut.Codec.RemainingSize);
+			DmaTransmit(AudioOut.Codec.CurrentPos, DMA_MAX(AudioOut.Codec.RemainingSize));
 			AudioOut.Codec.RemainingSize -= DMA_MAX(AudioOut.Codec.RemainingSize);
 		}
-//		ResetPortPin(TEST1_PORT, TEST1_PIN);
+		//		TogglePortPin(TEST2_PORT, TEST2_PIN);
+		//		ResetPortPin(TEST2_PORT, TEST2_PIN);
 	}
 }

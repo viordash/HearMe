@@ -74,6 +74,7 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
+    <ClCompile Include="AudioInProcess.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="C:\Users\ViorIDE\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" />
     <ClCompile Include="GeneralProcess.cpp" />
@@ -85,6 +86,7 @@
     <ClCompile Include="Peripheral\Leds.cpp" />
     <ClCompile Include="system_stm32f4xx.c" />
     <ClCompile Include="Utils\TimeHelper.cpp" />
+    <ClInclude Include="AudioInProcess.h" />
     <ClInclude Include="Peripheral\AudioSample.h" />
     <ClInclude Include="Peripheral\I2SAudioOut.h" />
     <ClInclude Include="Peripheral\I2SPdmAudioIn.h" />

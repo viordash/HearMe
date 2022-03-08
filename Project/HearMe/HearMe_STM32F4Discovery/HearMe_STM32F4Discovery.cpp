@@ -1,6 +1,7 @@
 
 #include "Board.h"
 #include "GeneralProcess.h"
+#include "AudioInProcess.h"
 
 int main(void) {
 
@@ -8,8 +9,10 @@ int main(void) {
 	GpioInit();
 
 	InitGeneralProcess();
+	InitAudioInProcess();
 
 	xTaskCreate(&TaskGeneralProcess, "GeneralProcess", 2048, NULL, tskIDLE_PRIORITY, &GeneralProcess.TaskHandle);
+	xTaskCreate(&TaskAudioInProcess, "AudioInProcess", 16384, NULL, tskIDLE_PRIORITY, &AudioInProcess.TaskHandle);
 
 	vTaskStartScheduler();
 	while (true)

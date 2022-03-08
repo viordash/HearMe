@@ -2,21 +2,7 @@
 #include "Board.h"
 #include "I2SPdmAudioIn.h"
 #include "TimeHelper.h"
-#include "pdm_filter.h"
 #include "I2SAudioOut.h"
-
-/* PDM buffer input size */
-#define INTERNAL_BUFF_SIZE 64
-
-typedef struct {
-	PDMFilter_InitStruct Filter;
-	uint16_t InternalBuffer[INTERNAL_BUFF_SIZE];
-	uint32_t InternalBufferSize = 0;
-	int16_t pAudioRecBuf[INTERNAL_BUFF_SIZE / 4];
-	uint32_t StereoBufferSize = 0;
-	int16_t StereoBuffer[(sizeof(pAudioRecBuf) / sizeof(pAudioRecBuf[0])) * 2 * 8];
-	int16_t StereoBuffer1[(sizeof(pAudioRecBuf) / sizeof(pAudioRecBuf[0])) * 2 * 8];
-} TPdmAudioIn, *PTPdmAudioIn;
 
 TPdmAudioIn PdmAudioIn;
 
@@ -27,6 +13,8 @@ void InitPdmAudioIn() {
 	memset(&PdmAudioIn, 0, sizeof(PdmAudioIn));
 
 	__CRC_CLK_ENABLE(); /* Enable CRC module */
+
+	PdmAudioIn.ReadyDataQueue = xQueueCreate(10, sizeof(uint16_t *));
 
 	/* Filter LP & HP Init */
 	PdmAudioIn.Filter.LP_HZ = 8000;
@@ -45,7 +33,7 @@ void InitPdmAudioIn() {
 void StartPdmAudioIn() {
 	I2S_HandleTypeDef hi2s2;
 	hi2s2.Instance = SPI2;
-	StartAudioOut((uint16_t *)PdmAudioIn.StereoBuffer1, sizeof(PdmAudioIn.StereoBuffer1), 80, false);
+	StartAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer), 80, false);
 	__HAL_I2S_ENABLE_IT(&hi2s2, (I2S_IT_RXNE /*| I2S_IT_ERR*/)); /* Enable RXNE and ERR interrupt */
 	__HAL_I2S_ENABLE(&hi2s2);
 }
@@ -58,8 +46,8 @@ void StopPdmAudioIn() {
 }
 
 static void NVIC_Init(void) {
-	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_3);
-	HAL_NVIC_SetPriority(SPI2_IRQn, 1, 0);
+	HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
+	HAL_NVIC_SetPriority(SPI2_IRQn, 6, 0);
 	HAL_NVIC_EnableIRQ(SPI2_IRQn);
 }
 
@@ -86,45 +74,23 @@ extern "C" void SPI2_IRQHandler() {
 	if (((i2ssr & I2S_FLAG_RXNE) == I2S_FLAG_RXNE) && (__HAL_I2S_GET_IT_SOURCE(hi2s, I2S_IT_RXNE) != RESET)) {
 
 		uint16_t app = ((uint16_t)hi2s->Instance->DR);
-		PdmAudioIn.InternalBuffer[PdmAudioIn.InternalBufferSize++] = __htons(app);
 
-		TogglePortPin(TEST2_PORT, TEST2_PIN);
-		/* Check to prevent overflow condition */
+		uint16_t *pBuffer;
+		switch (PdmAudioIn.InternalBufferIndex) {
+			case 1:
+				pBuffer = PdmAudioIn.InternalBuffer1;
+				break;
+			default:
+				pBuffer = PdmAudioIn.InternalBuffer0;
+				break;
+		}
+
+		pBuffer[PdmAudioIn.InternalBufferSize++] = __htons(app);
 		if (PdmAudioIn.InternalBufferSize >= INTERNAL_BUFF_SIZE) {
-			//			TogglePortPin(TEST1_PORT, TEST1_PIN);
+			TogglePortPin(TEST2_PORT, TEST2_PIN);
 			PdmAudioIn.InternalBufferSize = 0;
-
-			uint16_t volume = 100;
-			SetPortPin(TEST1_PORT, TEST1_PIN);
-			PDM_Filter_64_LSB((uint8_t *)PdmAudioIn.InternalBuffer, (uint16_t *)PdmAudioIn.pAudioRecBuf, volume, (PDMFilter_InitStruct *)&PdmAudioIn.Filter);
-			ResetPortPin(TEST1_PORT, TEST1_PIN);
-
-			for (size_t i = 0; i < sizeof(PdmAudioIn.pAudioRecBuf) / sizeof(PdmAudioIn.pAudioRecBuf[0]); i++) {
-				int16_t val = PdmAudioIn.pAudioRecBuf[i];
-				if (val > 32000) {
-					val -= 100;
-					//					SetPortPin(TEST1_PORT, TEST1_PIN);
-				} else if (val < -32000) {
-					val += 100;
-					//					ResetPortPin(TEST1_PORT, TEST1_PIN);
-				}
-
-				PdmAudioIn.StereoBuffer[PdmAudioIn.StereoBufferSize++] = (val);
-				PdmAudioIn.StereoBuffer[PdmAudioIn.StereoBufferSize++] = (val);
-			}
-			if (PdmAudioIn.StereoBufferSize >= sizeof(PdmAudioIn.StereoBuffer) / sizeof(PdmAudioIn.StereoBuffer[0])) {
-				memcpy(PdmAudioIn.StereoBuffer1, PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer1));
-				PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer1, sizeof(PdmAudioIn.StereoBuffer1));
-				PdmAudioIn.StereoBufferSize = 0;
-			}
+			PdmAudioIn.InternalBufferIndex = (PdmAudioIn.InternalBufferIndex + 1) & 0x01;
+			xQueueSendFromISR(PdmAudioIn.ReadyDataQueue, (void *)&pBuffer, NULL);
 		}
 	}
-
-	//	/* I2S Overrun error interrupt occurred -------------------------------------*/
-	//	if (((i2ssr & I2S_FLAG_OVR) == I2S_FLAG_OVR) && (__HAL_I2S_GET_IT_SOURCE(hi2s, I2S_IT_ERR) != RESET)) {
-	//
-	//		//		__HAL_I2S_DISABLE_IT(hi2s, (I2S_IT_RXNE | I2S_IT_ERR)); /* Disable RXNE and ERR interrupt */
-	//		__HAL_I2S_CLEAR_OVRFLAG(hi2s); /* Clear Overrun flag */
-	//		TogglePortPin(TEST1_PORT, TEST1_PIN);
-	//	}
 }

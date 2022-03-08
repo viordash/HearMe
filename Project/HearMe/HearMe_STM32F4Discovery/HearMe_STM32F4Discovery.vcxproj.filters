@@ -834,6 +834,9 @@
     <ClCompile Include="C:\Users\ViorIDE\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c">
       <Filter>Source files\Device-specific files\FreeRTOS</Filter>
     </ClCompile>
+    <ClCompile Include="AudioInProcess.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -865,6 +868,9 @@
     </ClInclude>
     <ClInclude Include="Peripheral\AudioSample.h">
       <Filter>Peripheral</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioInProcess.h">
+      <Filter>Source files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
