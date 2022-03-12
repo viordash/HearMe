@@ -26,12 +26,19 @@ void TaskAudioInProcess(void *arg) {
 
 			for (size_t i = 0; i < sizeof(pAudioRecBuf) / sizeof(pAudioRecBuf[0]); i++) {
 				int16_t val = pAudioRecBuf[i];
-				PdmAudioIn.StereoBuffer[PdmAudioIn.StereoBufferSize++] = (val);
-				PdmAudioIn.StereoBuffer[PdmAudioIn.StereoBufferSize++] = (val);
+				PdmAudioIn.DecodedBuffer[PdmAudioIn.DecodedBufferSize++] = val;
 			}
-			if (PdmAudioIn.StereoBufferSize >= sizeof(PdmAudioIn.StereoBuffer) / sizeof(PdmAudioIn.StereoBuffer[0])) {
+
+			if (PdmAudioIn.DecodedBufferSize >= sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0])) {
+				PdmAudioIn.DecodedBufferSize = 0;
+				
+				int ind = 0;
+				for (size_t i = 0; i < sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0]); i++) {
+					int16_t val = PdmAudioIn.DecodedBuffer[i];
+					PdmAudioIn.StereoBuffer[ind++] = val;
+					PdmAudioIn.StereoBuffer[ind++] = val;
+				}
 				PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
-				PdmAudioIn.StereoBufferSize = 0;
 			}
 		}
 	}

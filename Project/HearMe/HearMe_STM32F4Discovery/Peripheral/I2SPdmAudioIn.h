@@ -12,8 +12,10 @@ typedef struct {
 	QueueHandle_t ReadyDataQueue;
 	uint16_t MicLevel;
 
-	int16_t StereoBuffer[(INTERNAL_BUFF_SIZE / 4) * 2 * 16];
-	uint32_t StereoBufferSize = 0;
+	int16_t DecodedBuffer[(INTERNAL_BUFF_SIZE / 4) * 100];
+	uint32_t DecodedBufferSize = 0;
+
+	int16_t StereoBuffer[sizeof(DecodedBuffer) * 2];
 
 	PDMFilter_InitStruct Filter;
 } TPdmAudioIn, *PTPdmAudioIn;
