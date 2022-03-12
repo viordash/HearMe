@@ -12,7 +12,7 @@ int main(void) {
 	InitAudioInProcess();
 
 	xTaskCreate(&TaskGeneralProcess, "GeneralProcess", 2048, NULL, tskIDLE_PRIORITY, &GeneralProcess.TaskHandle);
-	xTaskCreate(&TaskAudioInProcess, "AudioInProcess", 16384, NULL, tskIDLE_PRIORITY, &AudioInProcess.TaskHandle);
+	xTaskCreate(&TaskAudioInProcess, "AudioInProcess", 4096, NULL, tskIDLE_PRIORITY+1, &AudioInProcess.TaskHandle);
 
 	vTaskStartScheduler();
 	while (true)

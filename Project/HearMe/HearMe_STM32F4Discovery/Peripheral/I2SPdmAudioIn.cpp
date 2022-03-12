@@ -16,12 +16,12 @@ void InitPdmAudioIn() {
 
 	PdmAudioIn.ReadyDataQueue = xQueueCreate(10, sizeof(uint16_t *));
 
-	/* Filter LP & HP Init */
 	PdmAudioIn.Filter.LP_HZ = 8000;
 	PdmAudioIn.Filter.HP_HZ = 100;
 	PdmAudioIn.Filter.Fs = 16000;
 	PdmAudioIn.Filter.Out_MicChannels = 1;
 	PdmAudioIn.Filter.In_MicChannels = 1;
+	PdmAudioIn.MicLevel = 250;
 
 	PDM_Filter_Init((PDMFilter_InitStruct *)&PdmAudioIn.Filter);
 
@@ -87,7 +87,7 @@ extern "C" void SPI2_IRQHandler() {
 
 		pBuffer[PdmAudioIn.InternalBufferSize++] = __htons(app);
 		if (PdmAudioIn.InternalBufferSize >= INTERNAL_BUFF_SIZE) {
-			TogglePortPin(TEST2_PORT, TEST2_PIN);
+			//			TogglePortPin(TEST2_PORT, TEST2_PIN);
 			PdmAudioIn.InternalBufferSize = 0;
 			PdmAudioIn.InternalBufferIndex = (PdmAudioIn.InternalBufferIndex + 1) & 0x01;
 			xQueueSendFromISR(PdmAudioIn.ReadyDataQueue, (void *)&pBuffer, NULL);
