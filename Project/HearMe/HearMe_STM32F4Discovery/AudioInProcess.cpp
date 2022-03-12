@@ -18,7 +18,7 @@ void InitAudioInProcess() {
 void TaskAudioInProcess(void *arg) {
 	while (true) {
 		int16_t *data;
-		if (xQueueReceive(PdmAudioIn.ReadyDataQueue, &data, (TickType_t)10) == pdPASS) {
+		if (xQueueReceive(PdmAudioIn.ReadyDataQueue, &data, (TickType_t)100) == pdPASS) {
 			uint16_t pAudioRecBuf[16];
 			SetPortPin(TEST1_PORT, TEST1_PIN);
 			PDM_Filter_64_LSB((uint8_t *)data, (uint16_t *)pAudioRecBuf, PdmAudioIn.MicLevel, (PDMFilter_InitStruct *)&PdmAudioIn.Filter);
@@ -31,7 +31,6 @@ void TaskAudioInProcess(void *arg) {
 			}
 			if (PdmAudioIn.StereoBufferSize >= sizeof(PdmAudioIn.StereoBuffer) / sizeof(PdmAudioIn.StereoBuffer[0])) {
 				PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
-				TogglePortPin(TEST2_PORT, TEST2_PIN);
 				PdmAudioIn.StereoBufferSize = 0;
 			}
 		}

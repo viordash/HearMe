@@ -72,7 +72,6 @@ extern "C" void SPI2_IRQHandler() {
 	I2S_HandleTypeDef *hi2s = &hi2s2;
 	__IO uint32_t i2ssr = hi2s->Instance->SR;
 	if (((i2ssr & I2S_FLAG_RXNE) == I2S_FLAG_RXNE) && (__HAL_I2S_GET_IT_SOURCE(hi2s, I2S_IT_RXNE) != RESET)) {
-
 		uint16_t app = ((uint16_t)hi2s->Instance->DR);
 
 		uint16_t *pBuffer;
@@ -87,7 +86,6 @@ extern "C" void SPI2_IRQHandler() {
 
 		pBuffer[PdmAudioIn.InternalBufferSize++] = __htons(app);
 		if (PdmAudioIn.InternalBufferSize >= INTERNAL_BUFF_SIZE) {
-			//			TogglePortPin(TEST2_PORT, TEST2_PIN);
 			PdmAudioIn.InternalBufferSize = 0;
 			PdmAudioIn.InternalBufferIndex = (PdmAudioIn.InternalBufferIndex + 1) & 0x01;
 			xQueueSendFromISR(PdmAudioIn.ReadyDataQueue, (void *)&pBuffer, NULL);
