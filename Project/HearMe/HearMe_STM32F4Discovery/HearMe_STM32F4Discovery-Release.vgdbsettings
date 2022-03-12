@@ -22,7 +22,10 @@
       </Version>
     </ToolchainID>
     <ProjectFile>HearMe_STM32F4Discovery.vcxproj</ProjectFile>
-    <ParallelJobCount>0</ParallelJobCount>
+    <RemoteBuildEnvironment>
+      <Records />
+    </RemoteBuildEnvironment>
+    <ParallelJobCount>1</ParallelJobCount>
     <SuppressDirectoryChangeMessages>true</SuppressDirectoryChangeMessages>
     <BuildAsRoot>false</BuildAsRoot>
   </Build>
@@ -44,11 +47,18 @@
     <ShowMessageAfterExecuting>true</ShowMessageAfterExecuting>
   </CustomShortcuts>
   <UserDefinedVariables />
+  <ImportedPropertySheets />
   <CodeSense>
     <Enabled>Unknown</Enabled>
     <ExtraSettings>
       <HideErrorsInSystemHeaders>true</HideErrorsInSystemHeaders>
       <SupportLightweightReferenceAnalysis>true</SupportLightweightReferenceAnalysis>
+      <DiscoverySettings>
+        <Mode>Disabled</Mode>
+        <SearchInProjectDir>true</SearchInProjectDir>
+        <SearchInSourceDirs>true</SearchInSourceDirs>
+        <SearchInIncludeSubdirs>true</SearchInIncludeSubdirs>
+      </DiscoverySettings>
       <CheckForClangFormatFiles>true</CheckForClangFormatFiles>
       <FormattingEngine xsi:nil="true" />
     </ExtraSettings>
@@ -56,6 +66,8 @@
       <Enabled>false</Enabled>
     </CodeAnalyzerSettings>
   </CodeSense>
+  <Configurations />
+  <ProgramArgumentsSuggestions />
   <Debug xsi:type="com.visualgdb.debug.embedded">
     <AdditionalStartupCommands />
     <AdditionalGDBSettings>
@@ -90,13 +102,14 @@
       <EnableNonStopMode>false</EnableNonStopMode>
       <MaxBreakpointLimit>0</MaxBreakpointLimit>
       <EnableVerboseMode>true</EnableVerboseMode>
+      <EnablePrettyPrinters>false</EnablePrettyPrinters>
     </AdditionalGDBSettings>
     <DebugMethod>
       <ID>com.sysprogs.arm.openocd.st</ID>
       <InterfaceID>stlink-st</InterfaceID>
-      <InterfaceSerialNumber>6&amp;195EBE90&amp;0&amp;4</InterfaceSerialNumber>
+      <InterfaceSerialNumber>6&amp;648DF71&amp;0&amp;1</InterfaceSerialNumber>
       <Configuration xsi:type="com.visualgdb.edp.openocd.settings">
-        <CommandLine>--set "CONNECT_UNDER_RESET 1" -f interface/stlink-dap.cfg --set "CHIPNAME $$SYS:MCU_ID$$Xx" -f target/stm32f4x.cfg -c init -c "reset init"</CommandLine>
+        <CommandLine>--set "CHIPNAME $$SYS:MCU_ID$$Xx" -f interface/stlink-dap.cfg -f target/stm32f4x.cfg -c init -c "reset init"</CommandLine>
         <ExtraParameters>
           <Frequency xsi:nil="true" />
           <BoostedFrequency xsi:nil="true" />
@@ -126,7 +139,36 @@
     <ValidateEndOfStackAddress>true</ValidateEndOfStackAddress>
     <StopAtEntryPoint>false</StopAtEntryPoint>
     <EnableVirtualHalts>false</EnableVirtualHalts>
-    <DynamicAnalysisSettings />
+    <DynamicAnalysisSettings>
+      <StackVerifier>
+        <VerifyStackBounds>false</VerifyStackBounds>
+        <AutoStepOutOfHook>true</AutoStepOutOfHook>
+        <StackLimitControlledByUser>false</StackLimitControlledByUser>
+        <ExplicitSizeLimit>0</ExplicitSizeLimit>
+        <ExplicitStackBase>0</ExplicitStackBase>
+        <Mode>Auto</Mode>
+      </StackVerifier>
+      <RealTimeWatch>
+        <SupportRTOSAnalysis>false</SupportRTOSAnalysis>
+        <SupportFunctionInstrumentation>false</SupportFunctionInstrumentation>
+        <MeasureOverhead>true</MeasureOverhead>
+      </RealTimeWatch>
+      <InstrumentedFunctions>
+        <InstrumentNewFunctions>true</InstrumentNewFunctions>
+        <ExplicitEndOfFLASH>0</ExplicitEndOfFLASH>
+        <ExplicitEndOfRAM>0</ExplicitEndOfRAM>
+      </InstrumentedFunctions>
+      <RTOSFeatures>
+        <RTOSFeatureSetting>
+          <FeatureID>com.sysprogs.analysis.thread.timing</FeatureID>
+          <Enabled>true</Enabled>
+        </RTOSFeatureSetting>
+        <RTOSFeatureSetting>
+          <FeatureID>com.sysprogs.analysis.freertos.queues</FeatureID>
+          <Enabled>true</Enabled>
+        </RTOSFeatureSetting>
+      </RTOSFeatures>
+    </DynamicAnalysisSettings>
     <EndOfStackSymbol>_estack</EndOfStackSymbol>
     <TimestampProviderTicksPerSecond>0</TimestampProviderTicksPerSecond>
     <KeepConsoleAfterExit>false</KeepConsoleAfterExit>
