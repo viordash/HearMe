@@ -15,6 +15,7 @@ void InitAudioInProcess() {
 	InitAudioOut();
 }
 
+bool test = false;
 void TaskAudioInProcess(void *arg) {
 	while (true) {
 		int16_t *data;
@@ -31,14 +32,52 @@ void TaskAudioInProcess(void *arg) {
 
 			if (PdmAudioIn.DecodedBufferSize >= sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0])) {
 				PdmAudioIn.DecodedBufferSize = 0;
-				
+
+				volatile int16_t prevValue = PdmAudioIn.PrevValue;
+				volatile int16_t prevValueVectorized = PdmAudioIn.PrevValueVectorized;
 				int ind = 0;
 				for (size_t i = 0; i < sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0]); i++) {
 					int16_t val = PdmAudioIn.DecodedBuffer[i];
+
+					int16_t diff = val - prevValue;
+
+					//					int16_t vectorized;
+					//					if (diff > 1000) {
+					//						vectorized = prevValueVectorized + 1;
+					//						prevValue = val;
+					//					} else if (diff < -1000) {
+					//						vectorized = prevValueVectorized - 1;
+					//						prevValue = val;
+					//					} else {
+					//						vectorized = prevValueVectorized;
+					//					}
+					//					if (vectorized > INT8_MAX) {
+					//						vectorized = INT8_MAX;
+					//					} else if (vectorized < INT8_MIN) {
+					//						vectorized = INT8_MIN;
+					//					}
+					//					PdmAudioIn.Vectorized[i] = vectorized;
+					//					prevValueVectorized = vectorized;
+
+					if (diff > 1000) {
+						PdmAudioIn.Vectorized[i] = 1;
+						prevValue = val;
+					} else if (diff < -1000) {
+						PdmAudioIn.Vectorized[i] = -1;
+						prevValue = val;
+					} else {
+						PdmAudioIn.Vectorized[i] = 0;
+					}
+
 					PdmAudioIn.StereoBuffer[ind++] = val;
 					PdmAudioIn.StereoBuffer[ind++] = val;
 				}
+				PdmAudioIn.PrevValue = prevValue;
+				PdmAudioIn.PrevValueVectorized = prevValueVectorized;
 				PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
+				if (test) {
+					test = false;
+				}
 			}
 		}
 	}
