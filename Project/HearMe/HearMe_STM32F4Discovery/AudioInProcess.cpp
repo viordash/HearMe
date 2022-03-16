@@ -36,6 +36,7 @@ void TaskAudioInProcess(void *arg) {
 			if (PdmAudioIn.DecodedBufferSize >= sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0])) {
 				PdmAudioIn.DecodedBufferSize = 0;
 
+				uint32_t amplitude = 0;
 				int16_t prevValue = PdmAudioIn.PrevValue;
 				int16_t prevValueVectorized = PdmAudioIn.PrevValueVectorized;
 				int ind = 0;
@@ -43,26 +44,6 @@ void TaskAudioInProcess(void *arg) {
 					int16_t val = PdmAudioIn.DecodedBuffer[i];
 
 					int16_t diff = val - prevValue;
-
-					//					int16_t vectorized;
-					//					if (diff > 1000) {
-					//						vectorized = prevValueVectorized + 1;
-					//						prevValue = val;
-					//					} else if (diff < -1000) {
-					//						vectorized = prevValueVectorized - 1;
-					//						prevValue = val;
-					//					} else {
-					//						vectorized = prevValueVectorized;
-					//					}
-					//					if (vectorized > INT8_MAX) {
-					//						vectorized = INT8_MAX;
-					//					} else if (vectorized < INT8_MIN) {
-					//						vectorized = INT8_MIN;
-					//					}
-					//					PdmAudioIn.Vectorized[i] = vectorized;
-					//					prevValueVectorized = vectorized;
-
-					//
 
 					if (diff > PdmAudioIn.PrevDiff) {
 						PdmAudioIn.Vectorized[i] = 1;
@@ -73,17 +54,32 @@ void TaskAudioInProcess(void *arg) {
 					} else {
 						PdmAudioIn.Vectorized[i] = 0;
 					}
+
 					if (diff < 0) {
 						PdmAudioIn.PrevDiff = -diff / 4;
+						if (amplitude < -diff) {
+							amplitude = -diff;
+						}
 					} else {
 						PdmAudioIn.PrevDiff = diff / 4;
+						if (amplitude < diff) {
+							amplitude = diff;
+						}
 					}
 
 					PdmAudioIn.StereoBuffer[ind++] = val;
 					PdmAudioIn.StereoBuffer[ind++] = val;
 				}
+
 				if (test) {
 					test = false;
+				}
+				PdmAudioIn.Amplitude = (PdmAudioIn.Amplitude + (amplitude * 8)) / 9;
+				if (PdmAudioIn.Amplitude < 2000) {
+					memset(PdmAudioIn.Vectorized, 0, sizeof(PdmAudioIn.Vectorized));
+				} else if (PdmAudioIn.StoreReferenceAudio) {
+					PdmAudioIn.StoreReferenceAudio = false;
+					memcpy(PdmAudioIn.ReferenceAudio, PdmAudioIn.AnalysisAudio, sizeof(PdmAudioIn.ReferenceAudio));
 				}
 
 				SetPortPin(TEST2_PORT, TEST2_PIN);

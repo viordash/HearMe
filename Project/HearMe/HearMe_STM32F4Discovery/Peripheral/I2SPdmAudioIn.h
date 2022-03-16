@@ -18,9 +18,10 @@ typedef struct {
 	QueueHandle_t ReadyDataQueue;
 	uint16_t MicLevel;
 
-	int16_t DecodedBuffer[(INTERNAL_BUFF_SIZE / 4) * 40];
+	int16_t DecodedBuffer[(INTERNAL_BUFF_SIZE / 4) * 100];
 	uint32_t DecodedBufferSize = 0;
 
+	uint32_t Amplitude;
 	int16_t PrevDiff;
 	int16_t PrevValue;
 	int8_t PrevValueVectorized;
@@ -31,6 +32,7 @@ typedef struct {
 
 	TAnalysisAudio AnalysisAudio[100];
 	TAnalysisAudio ReferenceAudio[sizeof(AnalysisAudio) / sizeof(AnalysisAudio[0])];
+	bool StoreReferenceAudio;
 	uint16_t Equability;
 
 	PDMFilter_InitStruct Filter;

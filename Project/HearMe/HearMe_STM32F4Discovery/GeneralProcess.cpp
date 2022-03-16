@@ -51,8 +51,7 @@ void TaskGeneralProcess(void *arg) {
 				break;
 
 			case TButtonState::MidPress:
-				memcpy(PdmAudioIn.ReferenceAudio, PdmAudioIn.AnalysisAudio, sizeof(PdmAudioIn.ReferenceAudio));
-
+				PdmAudioIn.StoreReferenceAudio = true;
 				break;
 
 			case TButtonState::LongPress:
