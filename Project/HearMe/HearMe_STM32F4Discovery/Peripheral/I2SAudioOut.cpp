@@ -84,7 +84,7 @@ void StartAudioOut(uint16_t *pData, uint32_t size, uint8_t volume, bool circular
 }
 
 void PlayAudioOut(uint16_t *pData, uint32_t size) {
-	TogglePortPin(TEST2_PORT, TEST2_PIN);
+//	TogglePortPin(TEST2_PORT, TEST2_PIN);
 	size = size / 2;
 	AudioOut.Codec.TotalSize = size;
 	AudioOut.Codec.CurrentPos = pData;
