@@ -10,7 +10,7 @@ TAudioInProcess AudioInProcess;
 static void SygnalAnalysis();
 static uint8_t AverageAudio(uint8_t stored, uint8_t current);
 static void AudioMatching();
-static bool Match(uint8_t reference, uint8_t analysed);
+static uint16_t Match(uint8_t reference, uint8_t analysed);
 
 void InitAudioInProcess() {
 	memset(&AudioInProcess, 0, sizeof(AudioInProcess));
@@ -38,23 +38,11 @@ void TaskAudioInProcess(void *arg) {
 
 				int16_t prevValue = PdmAudioIn.PrevValue;
 				int16_t prevValueVectorized = PdmAudioIn.PrevValueVectorized;
-				uint16_t maxAmplitude = 0;
 				int ind = 0;
 				for (size_t i = 0; i < sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0]); i++) {
 					int16_t val = PdmAudioIn.DecodedBuffer[i];
 
 					int16_t diff = val - prevValue;
-					uint16_t amplitude;
-					if (diff < 0) {
-						amplitude = -diff / 8;
-					} else {
-						amplitude = diff / 8;
-					}
-
-					if (amplitude > maxAmplitude) {
-						maxAmplitude = amplitude;
-						PdmAudioIn.Amplitude = ((PdmAudioIn.Amplitude * 8) + amplitude) / 9;
-					}
 
 					//					int16_t vectorized;
 					//					if (diff > 1000) {
@@ -76,14 +64,19 @@ void TaskAudioInProcess(void *arg) {
 
 					//
 
-					if (diff > PdmAudioIn.Amplitude) {
+					if (diff > PdmAudioIn.PrevDiff) {
 						PdmAudioIn.Vectorized[i] = 1;
 						prevValue = val;
-					} else if (diff < -PdmAudioIn.Amplitude) {
+					} else if (diff < -PdmAudioIn.PrevDiff) {
 						PdmAudioIn.Vectorized[i] = -1;
 						prevValue = val;
 					} else {
 						PdmAudioIn.Vectorized[i] = 0;
+					}
+					if (diff < 0) {
+						PdmAudioIn.PrevDiff = -diff / 4;
+					} else {
+						PdmAudioIn.PrevDiff = diff / 4;
 					}
 
 					PdmAudioIn.StereoBuffer[ind++] = val;
@@ -92,11 +85,7 @@ void TaskAudioInProcess(void *arg) {
 				if (test) {
 					test = false;
 				}
-				if (maxAmplitude > PdmAudioIn.Amplitude) {
-					PdmAudioIn.Amplitude = maxAmplitude;
-				} else {
-					PdmAudioIn.Amplitude = ((PdmAudioIn.Amplitude * 8) + maxAmplitude) / 9;
-				}
+
 				SetPortPin(TEST2_PORT, TEST2_PIN);
 				SygnalAnalysis();
 				AudioMatching();
@@ -168,29 +157,30 @@ static uint8_t AverageAudio(uint8_t stored, uint8_t current) {
 static void AudioMatching() {
 	uint16_t equability = 0;
 	for (size_t i = 0; i < sizeof(PdmAudioIn.AnalysisAudio) / sizeof(PdmAudioIn.AnalysisAudio[0]); i++) {
-		if (Match(PdmAudioIn.ReferenceAudio[i].R, PdmAudioIn.AnalysisAudio[i].R)) {
-			equability++;
-		}
-		if (Match(PdmAudioIn.ReferenceAudio[i].I, PdmAudioIn.AnalysisAudio[i].I)) {
-			equability++;
-		}
-		if (Match(PdmAudioIn.ReferenceAudio[i].F, PdmAudioIn.AnalysisAudio[i].F)) {
-			equability++;
-		}
+		equability += Match(PdmAudioIn.ReferenceAudio[i].R, PdmAudioIn.AnalysisAudio[i].R);
+		equability += Match(PdmAudioIn.ReferenceAudio[i].I, PdmAudioIn.AnalysisAudio[i].I);
+		equability += Match(PdmAudioIn.ReferenceAudio[i].F, PdmAudioIn.AnalysisAudio[i].F);
 	}
-	PdmAudioIn.Equability = ((PdmAudioIn.Equability * 4) + equability) / 5;
+	PdmAudioIn.Equability = (PdmAudioIn.Equability + (equability * 4)) / 5;
 }
 
-static bool Match(uint8_t reference, uint8_t analysed) {
+static uint16_t Match(uint8_t reference, uint8_t analysed) {
 	if (reference == 0) {
-		return false;
+		return 0;
 	}
+
 	int diff = reference - analysed;
-	if (diff >= reference / 4) {
-		return false;
+
+	if (diff > 0) {
+		if (diff < reference / 4) {
+			return reference;
+		}
+	} else if (diff < 0) {
+		if (-diff < analysed / 4) {
+			return analysed;
+		}
+	} else {
+		return reference;
 	}
-	if (-diff >= analysed / 4) {
-		return false;
-	}
-	return true;
+	return 0;
 }
