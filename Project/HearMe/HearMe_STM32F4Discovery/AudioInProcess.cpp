@@ -1,9 +1,9 @@
 
 #include "Board.h"
 #include "AudioInProcess.h"
-#include "I2SPdmAudioIn.h"
 #include "I2SAudioOut.h"
 #include "AudioSample.h"
+#include "FlashMemStorage.h"
 
 TAudioInProcess AudioInProcess;
 
@@ -16,6 +16,15 @@ void InitAudioInProcess() {
 	memset(&AudioInProcess, 0, sizeof(AudioInProcess));
 	InitPdmAudioIn();
 	InitAudioOut();
+
+	PTAudioDigest pReadAudioDigest;
+	ReadAudioDigest0(&pReadAudioDigest);
+
+	PTAudioDigest pWriteAudioDigest = new TAudioDigest;
+	memcpy(pWriteAudioDigest, pReadAudioDigest, sizeof(*pWriteAudioDigest));
+	memset(pWriteAudioDigest, 0x15, sizeof(*pWriteAudioDigest));
+	WriteAudioDigest0(pWriteAudioDigest);
+	delete pWriteAudioDigest;
 }
 
 bool test = false;

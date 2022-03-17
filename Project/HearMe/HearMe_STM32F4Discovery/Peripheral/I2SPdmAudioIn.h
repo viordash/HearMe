@@ -11,6 +11,10 @@ typedef struct {
 } TAnalysisAudio, *PTAnalysisAudio;
 
 typedef struct {
+	TAnalysisAudio Data[50][50];
+} TAudioDigest, *PTAudioDigest;
+
+typedef struct {
 	int InternalBufferIndex;
 	uint16_t InternalBuffer0[INTERNAL_BUFF_SIZE];
 	uint16_t InternalBuffer1[INTERNAL_BUFF_SIZE];

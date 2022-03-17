@@ -49,6 +49,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{988b6cef-24b9-4c80-a6cd-42bf72a0a237}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Storage">
+      <UniqueIdentifier>{25895ebc-d994-4566-89ad-23a8fd40908c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HearMe_STM32F4Discovery.cpp">
@@ -837,6 +840,9 @@
     <ClCompile Include="AudioInProcess.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="Storage\FlashMemStorage.cpp">
+      <Filter>Storage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -872,10 +878,18 @@
     <ClInclude Include="AudioInProcess.h">
       <Filter>Source files</Filter>
     </ClInclude>
+    <ClInclude Include="Storage\FlashMemStorage.h">
+      <Filter>Storage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="Peripheral\libPDMFilter_GCC.a">
       <Filter>Peripheral</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <LinkerScript Include="STM32F407VG_flash.lds">
+      <Filter>Source files</Filter>
+    </LinkerScript>
   </ItemGroup>
 </Project>

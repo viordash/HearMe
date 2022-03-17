@@ -44,7 +44,7 @@
       <CPPLanguageStandard>GNUPP11</CPPLanguageStandard>
       <InputLanguage>
       </InputLanguage>
-      <AdditionalIncludeDirectories>OS;Peripheral;Utils;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Og</Optimization>
     </ClCompile>
@@ -52,7 +52,7 @@
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <LibrarySearchDirectories>Peripheral;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
       <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <LinkerScript />
+      <LinkerScript>STM32F407VG_flash.lds</LinkerScript>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
@@ -60,7 +60,7 @@
       <CPPLanguageStandard>GNUPP11</CPPLanguageStandard>
       <InputLanguage>
       </InputLanguage>
-      <AdditionalIncludeDirectories>OS;Peripheral;Utils;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>O3</Optimization>
     </ClCompile>
@@ -86,6 +86,7 @@
     <ClCompile Include="Peripheral\I2SAudioOut.cpp" />
     <ClCompile Include="Peripheral\I2SPdmAudioIn.cpp" />
     <ClCompile Include="Peripheral\Leds.cpp" />
+    <ClCompile Include="Storage\FlashMemStorage.cpp" />
     <ClCompile Include="system_stm32f4xx.c" />
     <ClCompile Include="Utils\TimeHelper.cpp" />
     <ClInclude Include="AudioInProcess.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="Peripheral\I2SPdmAudioIn.h" />
     <ClInclude Include="Peripheral\Leds.h" />
     <ClInclude Include="Peripheral\pdm_filter.h" />
+    <ClInclude Include="Storage\FlashMemStorage.h" />
     <ClInclude Include="Utils\TimeHelper.h" />
     <None Include="stm32.props" />
     <ClCompile Include="$(BSP_ROOT)\STM32F4xxxx\StartupFiles\startup_stm32f407xx.c" />
@@ -352,5 +354,8 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="Peripheral\libPDMFilter_GCC.a" />
+  </ItemGroup>
+  <ItemGroup>
+    <LinkerScript Include="STM32F407VG_flash.lds" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "I2SPdmAudioIn.h"
+
 typedef struct {
 	uint32_t timerHeartbeat;
 	
