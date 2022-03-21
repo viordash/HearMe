@@ -8,11 +8,21 @@ typedef struct {
 	uint8_t R;
 	uint8_t F;
 	uint8_t I;
-} TAnalysisAudio, *PTAnalysisAudio;
+} TAnalysisAudioSample, *PTAnalysisAudioSample;
 
 typedef struct {
-	TAnalysisAudio Data[50][50];
+	TAnalysisAudioSample Samples[50];
 } TAudioDigest, *PTAudioDigest;
+
+typedef struct {
+	TAudioDigest Frames[50];
+} TAudioFragmentAnalysis, *PTAudioFragmentAnalysis;
+
+typedef struct {
+	TAudioFragmentAnalysis Fragment;
+	int Index;
+	int MatchedFramesCount;
+} TReferenceAudioDigest, *PTReferenceAudioDigest;
 
 typedef struct {
 	int InternalBufferIndex;
@@ -22,7 +32,7 @@ typedef struct {
 	QueueHandle_t ReadyDataQueue;
 	uint16_t MicLevel;
 
-	int16_t DecodedBuffer[(INTERNAL_BUFF_SIZE / 4) * 100];
+	int16_t DecodedBuffer[(INTERNAL_BUFF_SIZE / 4) * 40];
 	uint32_t DecodedBufferSize = 0;
 
 	uint32_t Amplitude;
@@ -34,8 +44,9 @@ typedef struct {
 
 	int16_t StereoBuffer[(sizeof(DecodedBuffer) / sizeof(DecodedBuffer[0])) * 2];
 
-	TAnalysisAudio AnalysisAudio[100];
-	TAnalysisAudio ReferenceAudio[sizeof(AnalysisAudio) / sizeof(AnalysisAudio[0])];
+	TAudioDigest CurrentAudioDigest;
+	TReferenceAudioDigest ReferenceAudioDigest;
+	bool RequestToStoreReferenceAudio;
 	bool StoreReferenceAudio;
 	uint16_t Equability;
 

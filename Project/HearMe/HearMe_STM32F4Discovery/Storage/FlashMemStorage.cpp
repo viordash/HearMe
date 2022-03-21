@@ -18,24 +18,24 @@ static bool FlashProgram(uint32_t dstData, uint32_t *srcData, uint32_t wordsCoun
 static bool FLASH_ErasePage(uint32_t sector);
 static bool FLASH_Program_Word(uint32_t address, uint32_t data);
 
-void ReadAudioDigest0(PTAudioDigest *ppAudioDigest) {
-	*ppAudioDigest = (PTAudioDigest)Storage0;
+void ReadAudioDigest0(PTAudioFragmentAnalysis *ppAudioFragmentAnalysis) {
+	*ppAudioFragmentAnalysis = (PTAudioFragmentAnalysis)Storage0;
 }
-bool WriteAudioDigest0(PTAudioDigest pAudioDigest) {
-	return WriteStorageRawData((uint32_t *)Storage0, (uint32_t *)pAudioDigest, sizeof(*pAudioDigest) / sizeof(uint32_t));
+bool WriteAudioDigest0(PTAudioFragmentAnalysis pAudioFragmentAnalysis) {
+	return WriteStorageRawData((uint32_t *)Storage0, (uint32_t *)pAudioFragmentAnalysis, sizeof(*pAudioFragmentAnalysis) / sizeof(uint32_t));
 }
 
-void ReadAudioDigest1(PTAudioDigest *ppAudioDigest) {
-	*ppAudioDigest = (PTAudioDigest)Storage1;
+void ReadAudioDigest1(PTAudioFragmentAnalysis *ppAudioFragmentAnalysis) {
+	*ppAudioFragmentAnalysis = (PTAudioFragmentAnalysis)Storage1;
 }
-bool WriteAudioDigest1(PTAudioDigest pAudioDigest) {
+bool WriteAudioDigest1(PTAudioFragmentAnalysis pAudioDigest) {
 	return WriteStorageRawData((uint32_t *)Storage1, (uint32_t *)pAudioDigest, sizeof(*pAudioDigest) / sizeof(uint32_t));
 }
 
-void ReadAudioDigest2(PTAudioDigest *ppAudioDigest) {
-	*ppAudioDigest = (PTAudioDigest)Storage2;
+void ReadAudioDigest2(PTAudioFragmentAnalysis *ppAudioFragmentAnalysis) {
+	*ppAudioFragmentAnalysis = (PTAudioFragmentAnalysis)Storage2;
 }
-bool WriteAudioDigest2(PTAudioDigest pAudioDigest) {
+bool WriteAudioDigest2(PTAudioFragmentAnalysis pAudioDigest) {
 	return WriteStorageRawData((uint32_t *)Storage2, (uint32_t *)pAudioDigest, sizeof(*pAudioDigest) / sizeof(uint32_t));
 }
 

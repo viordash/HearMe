@@ -51,7 +51,7 @@ void TaskGeneralProcess(void *arg) {
 				break;
 
 			case TButtonState::MidPress:
-				PdmAudioIn.StoreReferenceAudio = true;
+				PdmAudioIn.RequestToStoreReferenceAudio = true;
 				break;
 
 			case TButtonState::LongPress:

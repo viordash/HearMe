@@ -2,11 +2,11 @@
 
 #include "I2SPdmAudioIn.h"
 
-void ReadAudioDigest0(PTAudioDigest *ppAudioDigest);
-bool WriteAudioDigest0(PTAudioDigest pAudioDigest);
+void ReadAudioDigest0(PTAudioFragmentAnalysis *ppAudioFragmentAnalysis);
+bool WriteAudioDigest0(PTAudioFragmentAnalysis pAudioFragmentAnalysis);
 
-void ReadAudioDigest1(PTAudioDigest *ppAudioDigest);
-bool WriteAudioDigest1(PTAudioDigest pAudioDigest);
+void ReadAudioDigest1(PTAudioFragmentAnalysis *ppAudioFragmentAnalysis);
+bool WriteAudioDigest1(PTAudioFragmentAnalysis pAudioFragmentAnalysis);
 
-void ReadAudioDigest2(PTAudioDigest *ppAudioDigest);
-bool WriteAudioDigest2(PTAudioDigest pAudioDigest);
+void ReadAudioDigest2(PTAudioFragmentAnalysis *ppAudioFragmentAnalysis);
+bool WriteAudioDigest2(PTAudioFragmentAnalysis pAudioFragmentAnalysis);
