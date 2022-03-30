@@ -52,6 +52,75 @@
     <Filter Include="Storage">
       <UniqueIdentifier>{25895ebc-d994-4566-89ad-23a8fd40908c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DSP">
+      <UniqueIdentifier>{69b02c1e-84c5-4e2e-a1f2-d89c5064ddcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\ComputeLibrary">
+      <UniqueIdentifier>{694afc92-3a57-4c4e-aea1-f271f17bbd02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\ComputeLibrary\Include">
+      <UniqueIdentifier>{de03bbab-aafd-48af-be77-b374eefdbb53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\ComputeLibrary\Source">
+      <UniqueIdentifier>{4a710b8b-b3a5-46bf-8ac0-4a10762a31fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Include">
+      <UniqueIdentifier>{bfeff541-a09c-4b2a-aeb4-5f466c2f00fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Include\dsp">
+      <UniqueIdentifier>{197a6088-3d89-462f-8ba1-3ad291af49e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\PrivateInclude">
+      <UniqueIdentifier>{edef554d-1e13-4282-bc8b-461e299163ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source">
+      <UniqueIdentifier>{fce031a1-1cc5-4efd-9686-b409de60b692}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\BasicMathFunctions">
+      <UniqueIdentifier>{037222ab-d423-44df-b022-ddcbaf432e66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\BayesFunctions">
+      <UniqueIdentifier>{1fe4553b-c976-4bb5-9a73-055c5dd34b55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\CommonTables">
+      <UniqueIdentifier>{1f2274bf-b5e5-4bcf-92d5-b00c0c2d1d96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\ComplexMathFunctions">
+      <UniqueIdentifier>{25b9bb40-d9d2-4f5f-95b3-6493dfb6a9f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\ControllerFunctions">
+      <UniqueIdentifier>{86e07e26-4c44-44a8-8a47-500ea4e4dd21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\DistanceFunctions">
+      <UniqueIdentifier>{3bef06d9-a1a6-4458-a78c-0ffcfe96af25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\FastMathFunctions">
+      <UniqueIdentifier>{2dcb2df3-7a02-4e49-b99b-30060368dd23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\FilteringFunctions">
+      <UniqueIdentifier>{05be5907-40ac-4fd2-87d8-80a82c399de4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\InterpolationFunctions">
+      <UniqueIdentifier>{17e7b3af-ee76-4cee-9283-862fa12f1985}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\MatrixFunctions">
+      <UniqueIdentifier>{35bc6891-fbb8-46b2-860b-468f85da4501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\QuaternionMathFunctions">
+      <UniqueIdentifier>{04e7a76a-6429-4703-9ebd-4b12a36d030a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\StatisticsFunctions">
+      <UniqueIdentifier>{78740507-b74d-4fa3-89a4-3725a4b40b50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\SupportFunctions">
+      <UniqueIdentifier>{d82d0b74-4939-4a16-9dd6-cd616681fd99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\SVMFunctions">
+      <UniqueIdentifier>{a31ba240-75b9-4c96-ba8c-b44cdcca2c4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DSP\Source\TransformFunctions">
+      <UniqueIdentifier>{c68f826e-c032-48ac-8744-95f9fd8a770b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HearMe_STM32F4Discovery.cpp">
@@ -842,6 +911,237 @@
     </ClCompile>
     <ClCompile Include="Storage\FlashMemStorage.cpp">
       <Filter>Storage</Filter>
+    </ClCompile>
+    <ClInclude Include="CMSIS\DSP\ComputeLibrary\Include\NEMath.h">
+      <Filter>DSP\ComputeLibrary\Include</Filter>
+    </ClInclude>
+    <ClCompile Include="CMSIS\DSP\ComputeLibrary\Source\arm_cl_tables.c">
+      <Filter>DSP\ComputeLibrary\Source</Filter>
+    </ClCompile>
+    <ClInclude Include="CMSIS\DSP\Include\arm_common_tables.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_common_tables_f16.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_const_structs.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_const_structs_f16.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_helium_utils.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_math.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_math_f16.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_math_memory.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_math_types.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_math_types_f16.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_mve_tables.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_mve_tables_f16.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_vec_math.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\arm_vec_math_f16.h">
+      <Filter>DSP\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\basic_math_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\basic_math_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\bayes_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\bayes_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\complex_math_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\complex_math_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\controller_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\controller_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\distance_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\distance_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\fast_math_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\fast_math_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\filtering_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\filtering_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\interpolation_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\interpolation_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\matrix_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\matrix_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\none.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\quaternion_math_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\statistics_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\statistics_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\support_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\support_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\svm_defines.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\svm_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\svm_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\transform_functions.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\transform_functions_f16.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\Include\dsp\utils.h">
+      <Filter>DSP\Include\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\PrivateInclude\arm_sorting.h">
+      <Filter>DSP\PrivateInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\PrivateInclude\arm_vec_fft.h">
+      <Filter>DSP\PrivateInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="CMSIS\DSP\PrivateInclude\arm_vec_filtering.h">
+      <Filter>DSP\PrivateInclude</Filter>
+    </ClInclude>
+    <ClCompile Include="CMSIS\DSP\Source\BasicMathFunctions\BasicMathFunctions.c">
+      <Filter>DSP\Source\BasicMathFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\BasicMathFunctions\BasicMathFunctionsF16.c">
+      <Filter>DSP\Source\BasicMathFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\BayesFunctions\BayesFunctions.c">
+      <Filter>DSP\Source\BayesFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\BayesFunctions\BayesFunctionsF16.c">
+      <Filter>DSP\Source\BayesFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\CommonTables\CommonTables.c">
+      <Filter>DSP\Source\CommonTables</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\CommonTables\CommonTablesF16.c">
+      <Filter>DSP\Source\CommonTables</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\ComplexMathFunctions\ComplexMathFunctions.c">
+      <Filter>DSP\Source\ComplexMathFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\ComplexMathFunctions\ComplexMathFunctionsF16.c">
+      <Filter>DSP\Source\ComplexMathFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\ControllerFunctions\ControllerFunctions.c">
+      <Filter>DSP\Source\ControllerFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\DistanceFunctions\DistanceFunctions.c">
+      <Filter>DSP\Source\DistanceFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\DistanceFunctions\DistanceFunctionsF16.c">
+      <Filter>DSP\Source\DistanceFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\FastMathFunctions\FastMathFunctions.c">
+      <Filter>DSP\Source\FastMathFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\FastMathFunctions\FastMathFunctionsF16.c">
+      <Filter>DSP\Source\FastMathFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\FilteringFunctions\FilteringFunctions.c">
+      <Filter>DSP\Source\FilteringFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\FilteringFunctions\FilteringFunctionsF16.c">
+      <Filter>DSP\Source\FilteringFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\InterpolationFunctions\InterpolationFunctions.c">
+      <Filter>DSP\Source\InterpolationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\InterpolationFunctions\InterpolationFunctionsF16.c">
+      <Filter>DSP\Source\InterpolationFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\MatrixFunctions\MatrixFunctions.c">
+      <Filter>DSP\Source\MatrixFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\MatrixFunctions\MatrixFunctionsF16.c">
+      <Filter>DSP\Source\MatrixFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\QuaternionMathFunctions\QuaternionMathFunctions.c">
+      <Filter>DSP\Source\QuaternionMathFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\StatisticsFunctions\StatisticsFunctions.c">
+      <Filter>DSP\Source\StatisticsFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\StatisticsFunctions\StatisticsFunctionsF16.c">
+      <Filter>DSP\Source\StatisticsFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\SupportFunctions\SupportFunctions.c">
+      <Filter>DSP\Source\SupportFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\SupportFunctions\SupportFunctionsF16.c">
+      <Filter>DSP\Source\SupportFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\SVMFunctions\SVMFunctions.c">
+      <Filter>DSP\Source\SVMFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\SVMFunctions\SVMFunctionsF16.c">
+      <Filter>DSP\Source\SVMFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\TransformFunctions\TransformFunctions.c">
+      <Filter>DSP\Source\TransformFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="CMSIS\DSP\Source\TransformFunctions\TransformFunctionsF16.c">
+      <Filter>DSP\Source\TransformFunctions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

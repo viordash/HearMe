@@ -44,15 +44,18 @@
       <CPPLanguageStandard>GNUPP11</CPPLanguageStandard>
       <InputLanguage>
       </InputLanguage>
-      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;CMSIS/DSP/ComputeLibrary/Include;CMSIS/DSP/Include;CMSIS/DSP/Include/dsp;CMSIS/DSP/PrivateInclude;CMSIS/DSP/Source/DistanceFunctions;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Og</Optimization>
+      <AdditionalOptions />
+      <CLanguageStandard />
     </ClCompile>
     <Link>
-      <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
+      <AdditionalLinkerInputs>%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <LibrarySearchDirectories>Peripheral;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
-      <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+      <AdditionalLibraryNames>%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
       <LinkerScript>STM32F407VG_flash.lds</LinkerScript>
+      <AdditionalOptions />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
@@ -351,6 +354,83 @@
     <ClCompile Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.c" />
     <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os.h" />
     <ClInclude Include="$(BSP_ROOT)\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.h" />
+    <ClInclude Include="CMSIS\DSP\ComputeLibrary\Include\NEMath.h" />
+    <ClCompile Include="CMSIS\DSP\ComputeLibrary\Source\arm_cl_tables.c" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_common_tables.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_common_tables_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_const_structs.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_const_structs_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_helium_utils.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_math.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_math_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_math_memory.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_math_types.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_math_types_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_mve_tables.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_mve_tables_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_vec_math.h" />
+    <ClInclude Include="CMSIS\DSP\Include\arm_vec_math_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\basic_math_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\basic_math_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\bayes_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\bayes_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\complex_math_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\complex_math_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\controller_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\controller_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\distance_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\distance_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\fast_math_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\fast_math_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\filtering_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\filtering_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\interpolation_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\interpolation_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\matrix_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\matrix_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\none.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\quaternion_math_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\statistics_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\statistics_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\support_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\support_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\svm_defines.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\svm_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\svm_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\transform_functions.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\transform_functions_f16.h" />
+    <ClInclude Include="CMSIS\DSP\Include\dsp\utils.h" />
+    <ClInclude Include="CMSIS\DSP\PrivateInclude\arm_sorting.h" />
+    <ClInclude Include="CMSIS\DSP\PrivateInclude\arm_vec_fft.h" />
+    <ClInclude Include="CMSIS\DSP\PrivateInclude\arm_vec_filtering.h" />
+    <ClCompile Include="CMSIS\DSP\Source\BasicMathFunctions\BasicMathFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\BasicMathFunctions\BasicMathFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\BayesFunctions\BayesFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\BayesFunctions\BayesFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\CommonTables\CommonTables.c" />
+    <ClCompile Include="CMSIS\DSP\Source\CommonTables\CommonTablesF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\ComplexMathFunctions\ComplexMathFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\ComplexMathFunctions\ComplexMathFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\ControllerFunctions\ControllerFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\DistanceFunctions\DistanceFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\DistanceFunctions\DistanceFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\FastMathFunctions\FastMathFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\FastMathFunctions\FastMathFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\FilteringFunctions\FilteringFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\FilteringFunctions\FilteringFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\InterpolationFunctions\InterpolationFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\InterpolationFunctions\InterpolationFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\MatrixFunctions\MatrixFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\MatrixFunctions\MatrixFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\QuaternionMathFunctions\QuaternionMathFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\StatisticsFunctions\StatisticsFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\StatisticsFunctions\StatisticsFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\SupportFunctions\SupportFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\SupportFunctions\SupportFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\SVMFunctions\SVMFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\SVMFunctions\SVMFunctionsF16.c" />
+    <ClCompile Include="CMSIS\DSP\Source\TransformFunctions\TransformFunctions.c" />
+    <ClCompile Include="CMSIS\DSP\Source\TransformFunctions\TransformFunctionsF16.c" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Peripheral\libPDMFilter_GCC.a" />
