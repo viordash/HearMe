@@ -10,7 +10,7 @@ TAudioInProcess AudioInProcess;
 static void SygnalAnalysis();
 static uint8_t AverageAudio(uint8_t stored, uint8_t current);
 static void AudioMatching();
-static uint16_t Match(uint8_t reference, uint8_t analysed);
+static bool Match(uint8_t reference, uint8_t analysed);
 
 void InitAudioInProcess() {
 	memset(&AudioInProcess, 0, sizeof(AudioInProcess));
@@ -75,11 +75,8 @@ void TaskAudioInProcess(void *arg) {
 //					PdmAudioIn.StereoBuffer[ind++] = val;
 				}
 
-				if (test) {
-					test = false;
-				}
 				PdmAudioIn.Amplitude = (PdmAudioIn.Amplitude + (amplitude * 8)) / 9;
-				if (PdmAudioIn.Amplitude < 2000) {
+				if (PdmAudioIn.Amplitude < 500) {
 					memset(PdmAudioIn.Vectorized, 0, sizeof(PdmAudioIn.Vectorized));
 				} else if (PdmAudioIn.RequestToStoreReferenceAudio) {
 					PdmAudioIn.RequestToStoreReferenceAudio = false;
@@ -170,41 +167,71 @@ static uint8_t AverageAudio(uint8_t stored, uint8_t current) {
 
 static void AudioMatching() {
 	uint16_t equability = 0;
-
-	for (size_t i = 0; i < sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames) / sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[0]); i++) {
-		PTAudioDigest frame = &PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[PdmAudioIn.ReferenceAudioDigest.Index];
-		equability += Match(frame->Samples[i].R, PdmAudioIn.CurrentAudioDigest.Samples[i].R);
-		equability += Match(frame->Samples[i].I, PdmAudioIn.CurrentAudioDigest.Samples[i].I);
-		equability += Match(frame->Samples[i].F, PdmAudioIn.CurrentAudioDigest.Samples[i].F);
+	if (test) {
+		test = false;
 	}
-	PdmAudioIn.Equability = (PdmAudioIn.Equability + (equability * 4)) / 5;
+	for (size_t i = 0; i < sizeof(PdmAudioIn.CurrentAudioDigest.Samples) / sizeof(PdmAudioIn.CurrentAudioDigest.Samples[0]); i++) {
+		PTAudioDigest referenceFrame = &PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[PdmAudioIn.ReferenceAudioDigest.Index];
+		PTAnalysisAudioSample pReference = &referenceFrame->Samples[i];
+		PTAnalysisAudioSample pSampleCurrent = &PdmAudioIn.CurrentAudioDigest.Samples[i];
+		PTAnalysisAudioSample pSamplePrior = i > 0 //
+												 ? &PdmAudioIn.CurrentAudioDigest.Samples[i - 1]
+												 : NULL;
+		PTAnalysisAudioSample pSampleNext
+			= i < (sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames) / sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[0])) - 1 //
+				  ? &PdmAudioIn.CurrentAudioDigest.Samples[i + 1]
+				  : NULL;
 
-	if (PdmAudioIn.Equability > 10) {
+		if (pReference->R > 0) {
+			if (Match(pReference->R, pSampleCurrent->R)							   //
+				|| (pSamplePrior != NULL && Match(pReference->R, pSamplePrior->R)) //
+				|| (pSampleNext != NULL && Match(pReference->R, pSampleNext->R))) {
+				equability++;
+			}
+		}
+
+		if (pReference->I > 0) {
+			if (Match(pReference->I, pSampleCurrent->I)							   //
+				|| (pSamplePrior != NULL && Match(pReference->I, pSamplePrior->I)) //
+				|| (pSampleNext != NULL && Match(pReference->I, pSampleNext->I))) {
+				equability++;
+			}
+		}
+
+		if (pReference->F > 0) {
+			if (Match(pReference->F, pSampleCurrent->F)							   //
+				|| (pSamplePrior != NULL && Match(pReference->F, pSamplePrior->F)) //
+				|| (pSampleNext != NULL && Match(pReference->F, pSampleNext->F))) {
+				equability++;
+			}
+		}
+	}
+	PdmAudioIn.Equability = equability;
+
+	if (PdmAudioIn.Equability >= 3) {
 		PdmAudioIn.ReferenceAudioDigest.Index++;
 		if (PdmAudioIn.ReferenceAudioDigest.Index
 			>= sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames) / sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[0])) {
 			PdmAudioIn.ReferenceAudioDigest.Index = 0;
 		}
+	} else {
+		PdmAudioIn.ReferenceAudioDigest.Index = 0;
 	}
 }
 
-static uint16_t Match(uint8_t reference, uint8_t analysed) {
-	if (reference == 0) {
-		return 0;
-	}
-
+static bool Match(uint8_t reference, uint8_t analysed) {
 	int diff = reference - analysed;
 
 	if (diff > 0) {
 		if (diff < reference / 4) {
-			return reference;
+			return true;
 		}
 	} else if (diff < 0) {
 		if (-diff < analysed / 4) {
-			return analysed;
+			return true;
 		}
 	} else {
-		return reference;
+		return true;
 	}
 	return 0;
 }

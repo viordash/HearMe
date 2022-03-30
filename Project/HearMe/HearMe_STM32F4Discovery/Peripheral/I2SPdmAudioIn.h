@@ -11,7 +11,7 @@ typedef struct {
 } TAnalysisAudioSample, *PTAnalysisAudioSample;
 
 typedef struct {
-	TAnalysisAudioSample Samples[50];
+	TAnalysisAudioSample Samples[15];
 } TAudioDigest, *PTAudioDigest;
 
 typedef struct {

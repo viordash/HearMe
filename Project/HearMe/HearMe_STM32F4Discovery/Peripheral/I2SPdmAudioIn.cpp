@@ -18,8 +18,8 @@ void InitPdmAudioIn() {
 
 	PdmAudioIn.ReadyDataQueue = xQueueCreate(2, sizeof(uint16_t *));
 
-	PdmAudioIn.Filter.LP_HZ = 8000;
-	PdmAudioIn.Filter.HP_HZ = 100;
+	PdmAudioIn.Filter.LP_HZ = 2000;
+	PdmAudioIn.Filter.HP_HZ = 400;
 	PdmAudioIn.Filter.Fs = SampleRate;
 	PdmAudioIn.Filter.Out_MicChannels = 1;
 	PdmAudioIn.Filter.In_MicChannels = 1;
