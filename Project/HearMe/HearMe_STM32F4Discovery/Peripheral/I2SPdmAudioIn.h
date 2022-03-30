@@ -42,7 +42,7 @@ typedef struct {
 	int8_t PrevVectorized;
 	int8_t Vectorized[sizeof(DecodedBuffer) / sizeof(DecodedBuffer[0])];
 
-	int16_t StereoBuffer[(sizeof(DecodedBuffer) / sizeof(DecodedBuffer[0])) * 2];
+//	int16_t StereoBuffer[(sizeof(DecodedBuffer) / sizeof(DecodedBuffer[0])) * 2];
 
 	TAudioDigest CurrentAudioDigest;
 	TReferenceAudioDigest ReferenceAudioDigest;

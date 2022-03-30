@@ -71,8 +71,8 @@ void TaskAudioInProcess(void *arg) {
 						}
 					}
 
-					PdmAudioIn.StereoBuffer[ind++] = val;
-					PdmAudioIn.StereoBuffer[ind++] = val;
+//					PdmAudioIn.StereoBuffer[ind++] = val;
+//					PdmAudioIn.StereoBuffer[ind++] = val;
 				}
 
 				if (test) {
@@ -107,7 +107,7 @@ void TaskAudioInProcess(void *arg) {
 
 				PdmAudioIn.PrevValue = prevValue;
 				PdmAudioIn.PrevValueVectorized = prevValueVectorized;
-				PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
+//				PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
 			}
 		}
 	}
