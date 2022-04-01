@@ -1143,6 +1143,12 @@
     <ClCompile Include="CMSIS\DSP\Source\TransformFunctions\TransformFunctionsF16.c">
       <Filter>DSP\Source\TransformFunctions</Filter>
     </ClCompile>
+    <ClCompile Include="FftAnalyze.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="FftAnalyzeData.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -1180,6 +1186,9 @@
     </ClInclude>
     <ClInclude Include="Storage\FlashMemStorage.h">
       <Filter>Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="FftAnalyze.h">
+      <Filter>Source files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

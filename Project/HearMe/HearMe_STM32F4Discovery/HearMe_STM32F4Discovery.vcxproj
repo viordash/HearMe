@@ -51,9 +51,9 @@
       <CLanguageStandard />
     </ClCompile>
     <Link>
-      <AdditionalLinkerInputs>%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
+      <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <LibrarySearchDirectories>Peripheral;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
-      <AdditionalLibraryNames>%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+      <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
       <LinkerScript>STM32F407VG_flash.lds</LinkerScript>
       <AdditionalOptions />
     </Link>
@@ -63,7 +63,7 @@
       <CPPLanguageStandard>GNUPP11</CPPLanguageStandard>
       <InputLanguage>
       </InputLanguage>
-      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;CMSIS/DSP/ComputeLibrary/Include;CMSIS/DSP/Include;CMSIS/DSP/Include/dsp;CMSIS/DSP/PrivateInclude;CMSIS/DSP/Source/DistanceFunctions;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>O3</Optimization>
     </ClCompile>
@@ -71,8 +71,7 @@
       <AdditionalLinkerInputs>;%(Link.AdditionalLinkerInputs)</AdditionalLinkerInputs>
       <LibrarySearchDirectories>Peripheral;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
       <AdditionalLibraryNames>;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
-      <LinkerScript>
-      </LinkerScript>
+      <LinkerScript>STM32F407VG_flash.lds</LinkerScript>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
@@ -82,6 +81,8 @@
     <ClCompile Include="AudioInProcess.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="C:\Users\ViorIDE\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" />
+    <ClCompile Include="FftAnalyze.cpp" />
+    <ClCompile Include="FftAnalyzeData.cpp" />
     <ClCompile Include="GeneralProcess.cpp" />
     <ClCompile Include="HearMe_STM32F4Discovery.cpp" />
     <ClCompile Include="OS\SystemOS.cpp" />
@@ -93,6 +94,7 @@
     <ClCompile Include="system_stm32f4xx.c" />
     <ClCompile Include="Utils\TimeHelper.cpp" />
     <ClInclude Include="AudioInProcess.h" />
+    <ClInclude Include="FftAnalyze.h" />
     <ClInclude Include="Peripheral\AudioSample.h" />
     <ClInclude Include="Peripheral\I2SAudioOut.h" />
     <ClInclude Include="Peripheral\I2SPdmAudioIn.h" />

@@ -13,6 +13,7 @@
 #include "semphr.h"
 
 #include "SystemOS.h"
+#include "arm_math.h"
 
 #define LED_ORANGE_PIN GPIO_PIN_13
 #define LED_ORANGE_PORT GPIOD
