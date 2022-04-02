@@ -25,7 +25,7 @@ void InitAudioInProcess() {
 void InitFft(uint32_t dataSize);
 void FftAnalyze(float32_t *input, uint32_t inputSize, float32_t *output);
 
-bool test = true;
+bool test = false;
 void TaskAudioInProcess(void *arg) {
 
 	InitFft(sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0]));
@@ -41,6 +41,7 @@ void TaskAudioInProcess(void *arg) {
 			for (size_t i = 0; i < sizeof(pAudioRecBuf) / sizeof(pAudioRecBuf[0]); i++) {
 				float32_t val = pAudioRecBuf[i];
 				PdmAudioIn.DecodedBuffer[PdmAudioIn.DecodedBufferSize++] = val;
+				PdmAudioIn.DecodedBuffer[PdmAudioIn.DecodedBufferSize++] = 0;
 			}
 
 			if (PdmAudioIn.DecodedBufferSize >= sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0])) {
@@ -59,7 +60,7 @@ void TaskAudioInProcess(void *arg) {
 				}
 
 				SetPortPin(TEST2_PORT, TEST2_PIN);
-				FftAnalyze(PdmAudioIn.DecodedBuffer, sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0]), PdmAudioIn.FftOutput);
+				FftAnalyze(PdmAudioIn.DecodedBuffer, PdmAudioIn.FftOutput, sizeof(PdmAudioIn.FftOutput) / sizeof(PdmAudioIn.FftOutput[0]));
 				ResetPortPin(TEST2_PORT, TEST2_PIN);
 			}
 		}

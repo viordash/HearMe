@@ -32,10 +32,10 @@ typedef struct {
 	QueueHandle_t ReadyDataQueue;
 	uint16_t MicLevel;
 
-	float32_t DecodedBuffer[(INTERNAL_BUFF_SIZE / 4) * 16];
+	float32_t DecodedBuffer[(INTERNAL_BUFF_SIZE / 4) * 128];
 	uint32_t DecodedBufferSize = 0;
 
-	float32_t FftOutput[(sizeof(DecodedBuffer) / sizeof(DecodedBuffer[0])) / 2];
+	float32_t FftOutput[(sizeof(DecodedBuffer) / sizeof(DecodedBuffer[0])) / 4];
 
 	//	int16_t StereoBuffer[(sizeof(DecodedBuffer) / sizeof(DecodedBuffer[0])) * 2];
 
