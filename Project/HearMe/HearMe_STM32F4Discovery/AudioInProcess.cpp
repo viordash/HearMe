@@ -32,10 +32,6 @@ void TaskAudioInProcess(void *arg) {
 		float32_t *decodedBuffer;
 		if (xQueueReceive(PdmAudioIn.ReadyDecodedDataQueue, &decodedBuffer, (TickType_t)100) == pdPASS) {
 
-			if (test) {
-				test = false;
-			}
-
 			//			for (size_t i = 0; i < (sizeof(PdmAudioIn.DecodedBuffer0) / sizeof(PdmAudioIn.DecodedBuffer0[0])) / 2; i++) {
 			//				int16_t val = decodedBuffer[i * 2];
 			//				PdmAudioIn.StereoBuffer[i * 2] = val;
@@ -44,8 +40,37 @@ void TaskAudioInProcess(void *arg) {
 			//			PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
 
 			SetPortPin(TEST2_PORT, TEST2_PIN);
-			FftAnalyze(decodedBuffer, PdmAudioIn.FftOutput, sizeof(PdmAudioIn.FftOutput) / sizeof(PdmAudioIn.FftOutput[0]));
+			const uint32_t magnitudeSize = sizeof(PdmAudioIn.FftMagnitude) / sizeof(PdmAudioIn.FftMagnitude[0]);
+			FftAnalyze(decodedBuffer, PdmAudioIn.FftMagnitude, magnitudeSize);
 			ResetPortPin(TEST2_PORT, TEST2_PIN);
+
+			if (test) {
+				test = false;
+			}
+
+			float32_t maxBinValue;
+			float32_t binValue;
+			uint32_t binIndex;
+
+			memset(PdmAudioIn.CurrentAudioDigest, 0, sizeof(PdmAudioIn.CurrentAudioDigest));
+			arm_max_f32(PdmAudioIn.FftMagnitude, magnitudeSize, &maxBinValue, &binIndex);
+			binValue = maxBinValue;
+			const float32_t cutOff = maxBinValue / 20;
+			while (binValue > cutOff) {
+				uint32_t startIndex;
+				uint32_t endIndex;
+
+				if (!GetBinBorders(PdmAudioIn.FftMagnitude, magnitudeSize, binIndex, &startIndex, &endIndex)
+					|| binIndex > sizeof(PdmAudioIn.CurrentAudioDigest) / sizeof(PdmAudioIn.CurrentAudioDigest[0])) {
+					break;
+				}
+				for (size_t k = startIndex; k <= endIndex; k++) {
+					PdmAudioIn.FftMagnitude[k] = 0;
+				}
+				PdmAudioIn.CurrentAudioDigest[binIndex] = (binValue * 255) / maxBinValue;
+
+				arm_max_f32(PdmAudioIn.FftMagnitude, magnitudeSize, &binValue, &binIndex);
+			}
 		}
 	}
 }

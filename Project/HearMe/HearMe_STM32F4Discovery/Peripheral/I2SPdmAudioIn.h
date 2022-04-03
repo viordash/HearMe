@@ -43,11 +43,12 @@ typedef struct {
 
 #define FftOutSamplesCount ((sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) / 4)
 #define FftOutSamplesCountForFilteredPass (FftOutSamplesCount / ((SampleRate / 2) / FilterLowPassHz))
-	float32_t FftOutput[FftOutSamplesCountForFilteredPass];
+	float32_t FftMagnitude[FftOutSamplesCountForFilteredPass];
 
 	//	int16_t StereoBuffer[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) * 1];
 
-	TAudioDigest CurrentAudioDigest;
+	uint8_t CurrentAudioDigest[sizeof(FftMagnitude) / sizeof(FftMagnitude[0])];
+
 	TReferenceAudioDigest ReferenceAudioDigest;
 	bool RequestToStoreReferenceAudio;
 	bool StoreReferenceAudio;
