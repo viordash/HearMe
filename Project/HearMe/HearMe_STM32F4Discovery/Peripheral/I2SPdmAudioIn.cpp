@@ -16,7 +16,8 @@ void InitPdmAudioIn() {
 
 	__CRC_CLK_ENABLE(); /* Enable CRC module */
 
-	PdmAudioIn.ReadyDataQueue = xQueueCreate(2, sizeof(uint16_t *));
+	PdmAudioIn.ReadyPdmDataQueue = xQueueCreate(2, sizeof(uint16_t *));
+	PdmAudioIn.ReadyDecodedDataQueue = xQueueCreate(2, sizeof(float32_t *));
 
 	PdmAudioIn.Filter.LP_HZ = 4000;
 	PdmAudioIn.Filter.HP_HZ = 400;
@@ -26,7 +27,7 @@ void InitPdmAudioIn() {
 	PdmAudioIn.MicLevel = 250;
 
 	PDM_Filter_Init((PDMFilter_InitStruct *)&PdmAudioIn.Filter);
-	
+
 	NVIC_Init();
 
 	SPI_Init(SampleRate * 2);
@@ -35,7 +36,7 @@ void InitPdmAudioIn() {
 void StartPdmAudioIn() {
 	I2S_HandleTypeDef hi2s2;
 	hi2s2.Instance = SPI2;
-//	StartAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer), 80, false);
+	//	StartAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer), 80, false);
 	__HAL_I2S_ENABLE_IT(&hi2s2, (I2S_IT_RXNE /*| I2S_IT_ERR*/)); /* Enable RXNE and ERR interrupt */
 	__HAL_I2S_ENABLE(&hi2s2);
 }
@@ -90,7 +91,42 @@ extern "C" void SPI2_IRQHandler() {
 		if (PdmAudioIn.InternalBufferSize >= INTERNAL_BUFF_SIZE) {
 			PdmAudioIn.InternalBufferSize = 0;
 			PdmAudioIn.InternalBufferIndex = (PdmAudioIn.InternalBufferIndex + 1) & 0x01;
-			xQueueSendFromISR(PdmAudioIn.ReadyDataQueue, (void *)&pBuffer, NULL);
+			xQueueSendFromISR(PdmAudioIn.ReadyPdmDataQueue, (void *)&pBuffer, NULL);
+		}
+	}
+}
+
+void TaskPdmAudioDecode(void *arg) {
+
+	while (true) {
+		int16_t *data;
+		if (xQueueReceive(PdmAudioIn.ReadyPdmDataQueue, &data, (TickType_t)100) == pdPASS) {
+			int16_t pAudioRecBuf[16];
+			SetPortPin(TEST1_PORT, TEST1_PIN);
+			PDM_Filter_64_LSB((uint8_t *)data, (uint16_t *)pAudioRecBuf, PdmAudioIn.MicLevel, (PDMFilter_InitStruct *)&PdmAudioIn.Filter);
+			ResetPortPin(TEST1_PORT, TEST1_PIN);
+
+			float32_t *pBuffer;
+			switch (PdmAudioIn.DecodedBufferIndex) {
+				case 1:
+					pBuffer = PdmAudioIn.DecodedBuffer1;
+					break;
+				default:
+					pBuffer = PdmAudioIn.DecodedBuffer0;
+					break;
+			}
+
+			for (size_t i = 0; i < sizeof(pAudioRecBuf) / sizeof(pAudioRecBuf[0]); i++) {
+				float32_t val = pAudioRecBuf[i];
+				pBuffer[PdmAudioIn.DecodedBufferSize++] = val;
+				pBuffer[PdmAudioIn.DecodedBufferSize++] = 0;
+			}
+
+			if (PdmAudioIn.DecodedBufferSize >= sizeof(PdmAudioIn.DecodedBuffer0) / sizeof(PdmAudioIn.DecodedBuffer0[0])) {
+				PdmAudioIn.DecodedBufferSize = 0;
+				PdmAudioIn.DecodedBufferIndex = (PdmAudioIn.DecodedBufferIndex + 1) & 0x01;
+				xQueueSendFromISR(PdmAudioIn.ReadyDecodedDataQueue, (void *)&pBuffer, NULL);
+			}
 		}
 	}
 }

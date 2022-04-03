@@ -16,6 +16,7 @@ void InitAudioInProcess() {
 	memset(&AudioInProcess, 0, sizeof(AudioInProcess));
 	InitPdmAudioIn();
 	InitAudioOut();
+	InitFft(sizeof(PdmAudioIn.DecodedBuffer0) / sizeof(PdmAudioIn.DecodedBuffer0[0]));
 
 	PTAudioFragmentAnalysis pAudioFragmentAnalysis;
 	ReadAudioDigest0(&pAudioFragmentAnalysis);
@@ -27,42 +28,24 @@ void FftAnalyze(float32_t *input, uint32_t inputSize, float32_t *output);
 
 bool test = false;
 void TaskAudioInProcess(void *arg) {
-
-	InitFft(sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0]));
 	while (true) {
+		float32_t *decodedBuffer;
+		if (xQueueReceive(PdmAudioIn.ReadyDecodedDataQueue, &decodedBuffer, (TickType_t)100) == pdPASS) {
 
-		int16_t *data;
-		if (xQueueReceive(PdmAudioIn.ReadyDataQueue, &data, (TickType_t)100) == pdPASS) {
-			int16_t pAudioRecBuf[16];
-			SetPortPin(TEST1_PORT, TEST1_PIN);
-			PDM_Filter_64_LSB((uint8_t *)data, (uint16_t *)pAudioRecBuf, PdmAudioIn.MicLevel, (PDMFilter_InitStruct *)&PdmAudioIn.Filter);
-			ResetPortPin(TEST1_PORT, TEST1_PIN);
+			//			for (size_t i = 0; i < (sizeof(PdmAudioIn.DecodedBuffer0) / sizeof(PdmAudioIn.DecodedBuffer0[0])) / 2; i++) {
+			//				int16_t val = decodedBuffer[i * 2];
+			//				PdmAudioIn.StereoBuffer[i * 2] = val;
+			//				PdmAudioIn.StereoBuffer[(i * 2) + 1] = val;
+			//			}
+			//			PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
 
-			for (size_t i = 0; i < sizeof(pAudioRecBuf) / sizeof(pAudioRecBuf[0]); i++) {
-				float32_t val = pAudioRecBuf[i];
-				PdmAudioIn.DecodedBuffer[PdmAudioIn.DecodedBufferSize++] = val;
-				PdmAudioIn.DecodedBuffer[PdmAudioIn.DecodedBufferSize++] = 0;
+			if (test) {
+				test = false;
 			}
 
-			if (PdmAudioIn.DecodedBufferSize >= sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0])) {
-				PdmAudioIn.DecodedBufferSize = 0;
-
-				//				int ind = 0;
-				//				for (size_t i = 0; i < sizeof(PdmAudioIn.DecodedBuffer) / sizeof(PdmAudioIn.DecodedBuffer[0]); i++) {
-				//					int16_t val = PdmAudioIn.DecodedBuffer[i];
-				//					PdmAudioIn.StereoBuffer[ind++] = val;
-				//					PdmAudioIn.StereoBuffer[ind++] = val;
-				//				}
-				//				PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
-
-				if (test) {
-					test = false;
-				}
-
-				SetPortPin(TEST2_PORT, TEST2_PIN);
-				FftAnalyze(PdmAudioIn.DecodedBuffer, PdmAudioIn.FftOutput, sizeof(PdmAudioIn.FftOutput) / sizeof(PdmAudioIn.FftOutput[0]));
-				ResetPortPin(TEST2_PORT, TEST2_PIN);
-			}
+			SetPortPin(TEST2_PORT, TEST2_PIN);
+			FftAnalyze(decodedBuffer, PdmAudioIn.FftOutput, sizeof(PdmAudioIn.FftOutput) / sizeof(PdmAudioIn.FftOutput[0]));
+			ResetPortPin(TEST2_PORT, TEST2_PIN);
 		}
 	}
 }

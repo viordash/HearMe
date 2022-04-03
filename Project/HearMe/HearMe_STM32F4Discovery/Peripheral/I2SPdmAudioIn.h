@@ -29,15 +29,20 @@ typedef struct {
 	uint16_t InternalBuffer0[INTERNAL_BUFF_SIZE];
 	uint16_t InternalBuffer1[INTERNAL_BUFF_SIZE];
 	uint32_t InternalBufferSize = 0;
-	QueueHandle_t ReadyDataQueue;
+
+	TaskHandle_t TaskHandle;
+	QueueHandle_t ReadyPdmDataQueue;
+	QueueHandle_t ReadyDecodedDataQueue;
 	uint16_t MicLevel;
 
-	float32_t DecodedBuffer[(INTERNAL_BUFF_SIZE / 4) * 128];
+	int DecodedBufferIndex;
 	uint32_t DecodedBufferSize = 0;
+	float32_t DecodedBuffer0[(INTERNAL_BUFF_SIZE / 4) * 128];
+	float32_t DecodedBuffer1[sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])];
 
-	float32_t FftOutput[(sizeof(DecodedBuffer) / sizeof(DecodedBuffer[0])) / 4];
+	float32_t FftOutput[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) / 4];
 
-	//	int16_t StereoBuffer[(sizeof(DecodedBuffer) / sizeof(DecodedBuffer[0])) * 2];
+	//	int16_t StereoBuffer[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) * 1];
 
 	TAudioDigest CurrentAudioDigest;
 	TReferenceAudioDigest ReferenceAudioDigest;
@@ -53,3 +58,5 @@ extern TPdmAudioIn PdmAudioIn;
 void InitPdmAudioIn();
 void StartPdmAudioIn();
 void StopPdmAudioIn();
+
+void TaskPdmAudioDecode(void *arg);
