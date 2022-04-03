@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Board.h"
 #include "pdm_filter.h"
 
 #define INTERNAL_BUFF_SIZE (64)
@@ -40,7 +41,9 @@ typedef struct {
 	float32_t DecodedBuffer0[(INTERNAL_BUFF_SIZE / 4) * 128];
 	float32_t DecodedBuffer1[sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])];
 
-	float32_t FftOutput[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) / 4];
+#define FftOutSamplesCount ((sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) / 4)
+#define FftOutSamplesCountForFilteredPass (FftOutSamplesCount / ((SampleRate / 2) / FilterLowPassHz))
+	float32_t FftOutput[FftOutSamplesCountForFilteredPass];
 
 	//	int16_t StereoBuffer[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) * 1];
 

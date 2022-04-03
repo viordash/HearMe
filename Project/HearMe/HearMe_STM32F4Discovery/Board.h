@@ -15,6 +15,10 @@
 #include "SystemOS.h"
 #include "arm_math.h"
 
+#define SampleRate 16000
+#define FilterLowPassHz 4000
+#define FilterHighPassHz 300
+
 #define LED_ORANGE_PIN GPIO_PIN_13
 #define LED_ORANGE_PORT GPIOD
 #define LEDS_AF GPIO_AF2_TIM4

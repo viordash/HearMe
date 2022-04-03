@@ -4,8 +4,6 @@
 #include "TimeHelper.h"
 #include "I2SAudioOut.h"
 
-#define SampleRate 16000
-
 TPdmAudioIn PdmAudioIn;
 
 static void NVIC_Init(void);
@@ -19,8 +17,8 @@ void InitPdmAudioIn() {
 	PdmAudioIn.ReadyPdmDataQueue = xQueueCreate(2, sizeof(uint16_t *));
 	PdmAudioIn.ReadyDecodedDataQueue = xQueueCreate(2, sizeof(float32_t *));
 
-	PdmAudioIn.Filter.LP_HZ = 4000;
-	PdmAudioIn.Filter.HP_HZ = 400;
+	PdmAudioIn.Filter.LP_HZ = FilterLowPassHz;
+	PdmAudioIn.Filter.HP_HZ = FilterHighPassHz;
 	PdmAudioIn.Filter.Fs = SampleRate;
 	PdmAudioIn.Filter.Out_MicChannels = 1;
 	PdmAudioIn.Filter.In_MicChannels = 1;

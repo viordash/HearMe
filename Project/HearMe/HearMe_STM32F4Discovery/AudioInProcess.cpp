@@ -32,16 +32,16 @@ void TaskAudioInProcess(void *arg) {
 		float32_t *decodedBuffer;
 		if (xQueueReceive(PdmAudioIn.ReadyDecodedDataQueue, &decodedBuffer, (TickType_t)100) == pdPASS) {
 
+			if (test) {
+				test = false;
+			}
+
 			//			for (size_t i = 0; i < (sizeof(PdmAudioIn.DecodedBuffer0) / sizeof(PdmAudioIn.DecodedBuffer0[0])) / 2; i++) {
 			//				int16_t val = decodedBuffer[i * 2];
 			//				PdmAudioIn.StereoBuffer[i * 2] = val;
 			//				PdmAudioIn.StereoBuffer[(i * 2) + 1] = val;
 			//			}
 			//			PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
-
-			if (test) {
-				test = false;
-			}
 
 			SetPortPin(TEST2_PORT, TEST2_PIN);
 			FftAnalyze(decodedBuffer, PdmAudioIn.FftOutput, sizeof(PdmAudioIn.FftOutput) / sizeof(PdmAudioIn.FftOutput[0]));

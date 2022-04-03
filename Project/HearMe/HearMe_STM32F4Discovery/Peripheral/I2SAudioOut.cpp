@@ -69,7 +69,7 @@ static void DmaTransmit(uint16_t *pData, uint16_t size);
 void InitAudioOut() {
 	memset(&AudioOut, 0, sizeof(AudioOut));
 
-	Codec_Init(OUTPUT_DEVICE_AUTO, 16000);
+	Codec_Init(OUTPUT_DEVICE_AUTO, SampleRate);
 	Audio_MAL_Init();
 }
 
