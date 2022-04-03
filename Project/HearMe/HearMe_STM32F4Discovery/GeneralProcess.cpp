@@ -25,11 +25,11 @@ void TaskGeneralProcess(void *arg) {
 	while (true) {
 		switch (ButtonPeriodic()) {
 			case TButtonState::Pressed:
-				ChangeBlueLed(TLedMode::Br50);
+//				ChangeBlueLed(TLedMode::Br50);
 
 				break;
 			case TButtonState::Released:
-				ChangeBlueLed(TLedMode::Br1);
+//				ChangeBlueLed(TLedMode::Br1);
 				break;
 
 			case TButtonState::OnKeyDown:
@@ -52,10 +52,11 @@ void TaskGeneralProcess(void *arg) {
 
 			case TButtonState::MidPress:
 				PdmAudioIn.RequestToStoreReferenceAudio = true;
+				ChangeGreenLed(TLedMode::Flash);
 				break;
 
 			case TButtonState::LongPress:
-				ChangeGreenLed(TLedMode::FastFastFlash);
+//				ChangeGreenLed(TLedMode::FastFastFlash);
 				break;
 
 			default:

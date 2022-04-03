@@ -16,7 +16,7 @@ void FftAnalyze(float32_t *input, float32_t *magnitude, uint32_t magnitudeSize) 
 	arm_cmplx_mag_f32(input, magnitude, magnitudeSize); /* Process the data through the Complex Magnitude Module for calculating the magnitude at each bin */
 }
 
-bool GetBinBorders(float32_t *magnitude, uint32_t magnitudeSize, uint32_t binIndex, uint32_t *startIndex, uint32_t *endIndex) {
+bool GetBinBorders(const float32_t *magnitude, uint32_t magnitudeSize, uint32_t binIndex, uint32_t *startIndex, uint32_t *endIndex) {
 	*startIndex = 0;
 	float32_t binVal = magnitude[binIndex];
 
@@ -39,4 +39,8 @@ bool GetBinBorders(float32_t *magnitude, uint32_t magnitudeSize, uint32_t binInd
 		val = magnitude[i];
 	}
 	return *startIndex > 0 || *endIndex < magnitudeSize;
+}
+
+void GetMaxMagnitude(const float32_t *pSrc, uint32_t blockSize, float32_t *pResult, uint32_t *pIndex) {
+	arm_max_f32(pSrc, blockSize, pResult, pIndex);
 }

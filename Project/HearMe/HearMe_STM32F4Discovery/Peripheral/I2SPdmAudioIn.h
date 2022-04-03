@@ -5,14 +5,12 @@
 
 #define INTERNAL_BUFF_SIZE (64)
 
-typedef struct {
-	uint8_t R;
-	uint8_t F;
-	uint8_t I;
-} TAnalysisAudioSample, *PTAnalysisAudioSample;
+#define DecodedBufferCount ((INTERNAL_BUFF_SIZE / 4) * 128)
+#define FftOutSamplesCount (DecodedBufferCount / 4)
+#define FftOutSamplesCountForFilteredPass (FftOutSamplesCount / ((SampleRate / 2) / FilterLowPassHz))
 
 typedef struct {
-	TAnalysisAudioSample Samples[15];
+	uint8_t FftBins[FftOutSamplesCountForFilteredPass];
 } TAudioDigest, *PTAudioDigest;
 
 typedef struct {
@@ -38,23 +36,21 @@ typedef struct {
 
 	int DecodedBufferIndex;
 	uint32_t DecodedBufferSize = 0;
-	float32_t DecodedBuffer0[(INTERNAL_BUFF_SIZE / 4) * 128];
-	float32_t DecodedBuffer1[sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])];
+	float32_t DecodedBuffer0[DecodedBufferCount];
+	float32_t DecodedBuffer1[DecodedBufferCount];
 
-#define FftOutSamplesCount ((sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) / 4)
-#define FftOutSamplesCountForFilteredPass (FftOutSamplesCount / ((SampleRate / 2) / FilterLowPassHz))
 	float32_t FftMagnitude[FftOutSamplesCountForFilteredPass];
 
-	//	int16_t StereoBuffer[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) * 1];
-
-	uint8_t CurrentAudioDigest[sizeof(FftMagnitude) / sizeof(FftMagnitude[0])];
-
+	float32_t MaxBinValue;
+	TAudioDigest CurrentAudioDigest;
 	TReferenceAudioDigest ReferenceAudioDigest;
 	bool RequestToStoreReferenceAudio;
 	bool StoreReferenceAudio;
-	uint16_t Equability;
+	int16_t Equability;
 
 	PDMFilter_InitStruct Filter;
+
+	//	int16_t StereoBuffer[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) * 1];
 } TPdmAudioIn, *PTPdmAudioIn;
 
 extern TPdmAudioIn PdmAudioIn;
