@@ -100,9 +100,9 @@ void TaskPdmAudioDecode(void *arg) {
 		int16_t *data;
 		if (xQueueReceive(PdmAudioIn.ReadyPdmDataQueue, &data, (TickType_t)100) == pdPASS) {
 			int16_t pAudioRecBuf[16];
-			SetPortPin(TEST1_PORT, TEST1_PIN);
+			//			SetPortPin(TEST1_PORT, TEST1_PIN);
 			PDM_Filter_64_LSB((uint8_t *)data, (uint16_t *)pAudioRecBuf, PdmAudioIn.MicLevel, (PDMFilter_InitStruct *)&PdmAudioIn.Filter);
-			ResetPortPin(TEST1_PORT, TEST1_PIN);
+			//			ResetPortPin(TEST1_PORT, TEST1_PIN);
 
 			float32_t *pBuffer;
 			switch (PdmAudioIn.DecodedBufferIndex) {
