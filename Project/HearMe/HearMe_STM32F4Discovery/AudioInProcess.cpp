@@ -67,9 +67,11 @@ void TaskAudioInProcess(void *arg) {
 					ChangeGreenLed(TLedMode::Off);
 				}
 			} else if (PdmAudioIn.MaxBinValue > 60000) {
+				SetPortPin(TEST1_PORT, TEST1_PIN);
 				AudioMatching();
+				ResetPortPin(TEST1_PORT, TEST1_PIN);
 			} else if (PdmAudioIn.Equability > 0) {
-				PdmAudioIn.Equability--;
+				PdmAudioIn.Equability -= PdmAudioIn.Equability / 5;
 			}
 		}
 	}
@@ -118,85 +120,89 @@ static uint8_t GetMaxValue(PTAudioDigest pAudioDigest) {
 	return out;
 }
 
-static bool PrepareAudioMatching() {
-	int significantCount = 0;
-	int equability = 0;
+static bool PrepareAudioMatching(PTAudioDigest referenceFrame) {
+	uint32_t significantWeight = 0;
+	uint32_t equalsWeight = 0;
 
-	PTAudioDigest referenceFrame = &PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[PdmAudioIn.ReferenceAudioDigest.Index];
 	for (size_t i = 0; i < sizeof(TAudioDigest::FftBins) / sizeof(TAudioDigest::FftBins[0]); i++) {
 		uint8_t reference = referenceFrame->FftBins[i];
 		if (reference == 0) {
 			PdmAudioIn.CurrentAudioDigest.FftBins[i] = 0;
 			continue;
 		}
-		significantCount++;
+		significantWeight += reference;
+
 		uint8_t sampleCurrent = PdmAudioIn.CurrentAudioDigest.FftBins[i];
 		if (sampleCurrent > 0) {
-			equability++;
+			equalsWeight += sampleCurrent;
 			continue;
 		}
 
 		uint8_t samplePrior = i > 0 //
 								  ? PdmAudioIn.CurrentAudioDigest.FftBins[i - 1]
 								  : 0;
-		if (samplePrior > 0) {
+		if (samplePrior > 0 && referenceFrame->FftBins[i - 1] == 0) {
 			PdmAudioIn.CurrentAudioDigest.FftBins[i] = samplePrior;
 			PdmAudioIn.CurrentAudioDigest.FftBins[i - 1] = 0;
-			equability++;
+			equalsWeight += samplePrior;
 			continue;
 		}
 
 		uint8_t sampleNext = i < (sizeof(TAudioDigest::FftBins) / sizeof(TAudioDigest::FftBins[0])) - 1 //
 								 ? PdmAudioIn.CurrentAudioDigest.FftBins[i + 1]
 								 : 0;
-		if (sampleNext > 0) {
+		if (sampleNext > 0 && referenceFrame->FftBins[i + 1] == 0) {
 			PdmAudioIn.CurrentAudioDigest.FftBins[i] = sampleNext;
 			PdmAudioIn.CurrentAudioDigest.FftBins[i + 1] = 0;
-			equability++;
+			equalsWeight += sampleNext;
 			continue;
 		}
 
 		uint8_t samplePriorPrior = i > 1 //
 									   ? PdmAudioIn.CurrentAudioDigest.FftBins[i - 2]
 									   : 0;
-		if (samplePriorPrior > 0) {
+		if (samplePriorPrior > 0 && referenceFrame->FftBins[i - 2] == 0) {
 			PdmAudioIn.CurrentAudioDigest.FftBins[i] = samplePriorPrior;
 			PdmAudioIn.CurrentAudioDigest.FftBins[i - 2] = 0;
-			equability++;
+			equalsWeight += samplePriorPrior;
 			continue;
 		}
 
 		uint8_t sampleNextNext = i < (sizeof(TAudioDigest::FftBins) / sizeof(TAudioDigest::FftBins[0])) - 2 //
 									 ? PdmAudioIn.CurrentAudioDigest.FftBins[i + 2]
 									 : 0;
-		if (sampleNextNext > 0) {
+		if (sampleNextNext > 0 && referenceFrame->FftBins[i + 2] == 0) {
 			PdmAudioIn.CurrentAudioDigest.FftBins[i] = sampleNextNext;
 			PdmAudioIn.CurrentAudioDigest.FftBins[i + 2] = 0;
-			equability++;
+			equalsWeight += sampleNextNext;
 			continue;
 		}
+		PdmAudioIn.CurrentAudioDigest.FftBins[i] = 0;
+		referenceFrame->FftBins[i] = 0;
 	}
-	const int significantCount_70perc = significantCount - (significantCount / 3);
-	return equability >= significantCount_70perc;
+	const uint32_t significantCount_70perc = significantWeight - (significantWeight / 3);
+	return equalsWeight >= significantCount_70perc;
 }
 
+TAudioDigest localReferenceFrame;
 static void AudioMatching() {
 	if (test) {
 		test = false;
 	}
+	localReferenceFrame = PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[PdmAudioIn.ReferenceAudioDigest.Index];
 
-	if (!PrepareAudioMatching()) {
+	if (!PrepareAudioMatching(&localReferenceFrame)) {
 		PdmAudioIn.ReferenceAudioDigest.Index = 0;
 		PdmAudioIn.Equability = 0;
 		return;
 	}
+	NormalizeLevels(&localReferenceFrame);
 	NormalizeLevels(&PdmAudioIn.CurrentAudioDigest);
 
 	int significantCount = 0;
 	int equability = 0;
-	PTAudioDigest referenceFrame = &PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[PdmAudioIn.ReferenceAudioDigest.Index];
 	for (size_t i = 0; i < sizeof(TAudioDigest::FftBins) / sizeof(TAudioDigest::FftBins[0]); i++) {
-		uint8_t reference = referenceFrame->FftBins[i];
+		uint8_t reference = localReferenceFrame.FftBins[i];
 		if (reference == 0) {
 			continue;
 		}
@@ -216,8 +222,8 @@ static void AudioMatching() {
 	}
 
 	PdmAudioIn.Equability += equability;
-
-	if (PdmAudioIn.ReferenceAudioDigest.Index > 2) {
+	ChangeBlueLed(TLedMode::Pulse);
+	if (PdmAudioIn.ReferenceAudioDigest.Index > 0) {
 		ChangeBlueLed(TLedMode::Pulse);
 	}
 	PdmAudioIn.ReferenceAudioDigest.Index++;
@@ -231,11 +237,11 @@ static bool Match(uint8_t reference, uint8_t analysed) {
 	int diff = reference - analysed;
 
 	if (diff > 0) {
-		if (diff < reference - (reference / 4)) {
+		if (diff < reference - (reference / 3)) {
 			return true;
 		}
 	} else if (diff < 0) {
-		if (-diff < analysed - (analysed / 4)) {
+		if (-diff < analysed - (analysed / 3)) {
 			return true;
 		}
 	} else {
