@@ -3,9 +3,9 @@
 #include "Board.h"
 #include "pdm_filter.h"
 
-#define INTERNAL_BUFF_SIZE (64)
+#define INTERNAL_BUFF_SIZE (128)
 
-#define DecodedBufferCount ((INTERNAL_BUFF_SIZE / 4) * 128)
+#define DecodedBufferCount ((INTERNAL_BUFF_SIZE / 4) * 64)
 #define FftOutSamplesCount (DecodedBufferCount / 4)
 #define FftOutSamplesCountForFilteredPass (FftOutSamplesCount / ((SampleRate / 2) / FilterLowPassHz))
 
@@ -50,7 +50,7 @@ typedef struct {
 
 	PDMFilter_InitStruct Filter;
 
-	//	int16_t StereoBuffer[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) * 1];
+	int16_t StereoBuffer[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) * 1];
 } TPdmAudioIn, *PTPdmAudioIn;
 
 extern TPdmAudioIn PdmAudioIn;

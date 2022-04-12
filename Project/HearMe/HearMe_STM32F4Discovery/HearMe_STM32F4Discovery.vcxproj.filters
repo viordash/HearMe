@@ -1149,6 +1149,9 @@
     <ClCompile Include="FftAnalyzeData.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="DSP\ConvertPdm.cpp">
+      <Filter>DSP</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -1189,6 +1192,12 @@
     </ClInclude>
     <ClInclude Include="FftAnalyze.h">
       <Filter>Source files</Filter>
+    </ClInclude>
+    <ClInclude Include="DSP\ConvertPdm.h">
+      <Filter>DSP</Filter>
+    </ClInclude>
+    <ClInclude Include="DSP\ConvertPdmLookup.h">
+      <Filter>DSP</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

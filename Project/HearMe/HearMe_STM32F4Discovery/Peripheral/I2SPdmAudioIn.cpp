@@ -3,6 +3,7 @@
 #include "I2SPdmAudioIn.h"
 #include "TimeHelper.h"
 #include "I2SAudioOut.h"
+#include "ConvertPdm.h"
 
 TPdmAudioIn PdmAudioIn;
 
@@ -90,20 +91,34 @@ extern "C" void SPI2_IRQHandler() {
 			PdmAudioIn.InternalBufferSize = 0;
 			PdmAudioIn.InternalBufferIndex = (PdmAudioIn.InternalBufferIndex + 1) & 0x01;
 			xQueueSendFromISR(PdmAudioIn.ReadyPdmDataQueue, (void *)&pBuffer, NULL);
+			TogglePortPin(TEST2_PORT, TEST2_PIN);
 		}
 	}
 }
 
+float32_t pAudioRecBuf[16];
+bool test = false;
 void TaskPdmAudioDecode(void *arg) {
 
 	while (true) {
-		int16_t *data;
+		uint16_t *data;
 		if (xQueueReceive(PdmAudioIn.ReadyPdmDataQueue, &data, (TickType_t)100) == pdPASS) {
-			int16_t pAudioRecBuf[16];
-			//			SetPortPin(TEST1_PORT, TEST1_PIN);
-			PDM_Filter_64_LSB((uint8_t *)data, (uint16_t *)pAudioRecBuf, PdmAudioIn.MicLevel, (PDMFilter_InitStruct *)&PdmAudioIn.Filter);
-			//			ResetPortPin(TEST1_PORT, TEST1_PIN);
 
+			SetPortPin(TEST1_PORT, TEST1_PIN);
+			
+			ConvertPdm2Pcm(data, pAudioRecBuf);
+
+			//			PutPdmData(data);
+			//			if (PdmConverted(pBuffer, sizeof(PdmAudioIn.DecodedBuffer0))) {
+			//				TogglePortPin(TEST1_PORT, TEST1_PIN);
+			//				PdmAudioIn.DecodedBufferIndex = (PdmAudioIn.DecodedBufferIndex + 1) & 0x01;
+			//				xQueueSendFromISR(PdmAudioIn.ReadyDecodedDataQueue, (void *)&pBuffer, NULL);
+			//			}
+			//			PDM_Filter_64_LSB((uint8_t *)data, (uint16_t *)pAudioRecBuf, PdmAudioIn.MicLevel, (PDMFilter_InitStruct *)&PdmAudioIn.Filter);
+			ResetPortPin(TEST1_PORT, TEST1_PIN);
+			if (test) {
+				test = false;
+			}
 			float32_t *pBuffer;
 			switch (PdmAudioIn.DecodedBufferIndex) {
 				case 1:

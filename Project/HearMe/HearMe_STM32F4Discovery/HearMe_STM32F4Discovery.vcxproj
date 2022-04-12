@@ -44,7 +44,7 @@
       <CPPLanguageStandard>GNUPP11</CPPLanguageStandard>
       <InputLanguage>
       </InputLanguage>
-      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;CMSIS/DSP/ComputeLibrary/Include;CMSIS/DSP/Include;CMSIS/DSP/Include/dsp;CMSIS/DSP/PrivateInclude;CMSIS/DSP/Source/DistanceFunctions;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;DSP;CMSIS/DSP/ComputeLibrary/Include;CMSIS/DSP/Include;CMSIS/DSP/Include/dsp;CMSIS/DSP/PrivateInclude;CMSIS/DSP/Source/DistanceFunctions;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>Og</Optimization>
       <AdditionalOptions />
@@ -63,7 +63,7 @@
       <CPPLanguageStandard>GNUPP11</CPPLanguageStandard>
       <InputLanguage>
       </InputLanguage>
-      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;CMSIS/DSP/ComputeLibrary/Include;CMSIS/DSP/Include;CMSIS/DSP/Include/dsp;CMSIS/DSP/PrivateInclude;CMSIS/DSP/Source/DistanceFunctions;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>OS;Peripheral;Utils;Storage;DSP;CMSIS/DSP/ComputeLibrary/Include;CMSIS/DSP/Include;CMSIS/DSP/Include/dsp;CMSIS/DSP/PrivateInclude;CMSIS/DSP/Source/DistanceFunctions;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG=1;RELEASE=1;%(ClCompile.PreprocessorDefinitions)</PreprocessorDefinitions>
       <Optimization>O3</Optimization>
     </ClCompile>
@@ -81,6 +81,7 @@
     <ClCompile Include="AudioInProcess.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="C:\Users\ViorIDE\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" />
+    <ClCompile Include="DSP\ConvertPdm.cpp" />
     <ClCompile Include="FftAnalyze.cpp" />
     <ClCompile Include="FftAnalyzeData.cpp" />
     <ClCompile Include="GeneralProcess.cpp" />
@@ -94,6 +95,8 @@
     <ClCompile Include="system_stm32f4xx.c" />
     <ClCompile Include="Utils\TimeHelper.cpp" />
     <ClInclude Include="AudioInProcess.h" />
+    <ClInclude Include="DSP\ConvertPdm.h" />
+    <ClInclude Include="DSP\ConvertPdmLookup.h" />
     <ClInclude Include="FftAnalyze.h" />
     <ClInclude Include="Peripheral\AudioSample.h" />
     <ClInclude Include="Peripheral\I2SAudioOut.h" />
