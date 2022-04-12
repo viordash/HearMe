@@ -80,7 +80,6 @@
   <ItemGroup>
     <ClCompile Include="AudioInProcess.cpp" />
     <ClCompile Include="Board.cpp" />
-    <ClCompile Include="C:\Users\ViorIDE\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c" />
     <ClCompile Include="DSP\ConvertPdm.cpp" />
     <ClCompile Include="FftAnalyze.cpp" />
     <ClCompile Include="FftAnalyzeData.cpp" />
@@ -102,7 +101,6 @@
     <ClInclude Include="Peripheral\I2SAudioOut.h" />
     <ClInclude Include="Peripheral\I2SPdmAudioIn.h" />
     <ClInclude Include="Peripheral\Leds.h" />
-    <ClInclude Include="Peripheral\pdm_filter.h" />
     <ClInclude Include="Storage\FlashMemStorage.h" />
     <ClInclude Include="Utils\TimeHelper.h" />
     <None Include="stm32.props" />
@@ -436,9 +434,7 @@
     <ClCompile Include="CMSIS\DSP\Source\SVMFunctions\SVMFunctionsF16.c" />
     <ClCompile Include="CMSIS\DSP\Source\TransformFunctions\TransformFunctions.c" />
     <ClCompile Include="CMSIS\DSP\Source\TransformFunctions\TransformFunctionsF16.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="Peripheral\libPDMFilter_GCC.a" />
+    <ClCompile Include="$(BSP_ROOT)\FreeRTOS\Source\portable\GCC\ARM_CM4F\port.c" />
   </ItemGroup>
   <ItemGroup>
     <LinkerScript Include="STM32F407VG_flash.lds" />

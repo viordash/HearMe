@@ -903,9 +903,6 @@
     <ClCompile Include="Peripheral\I2SAudioOut.cpp">
       <Filter>Peripheral</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\ViorIDE\AppData\Local\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32\FreeRTOS\Source\portable\GCC\ARM_CM3\port.c">
-      <Filter>Source files\Device-specific files\FreeRTOS</Filter>
-    </ClCompile>
     <ClCompile Include="AudioInProcess.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
@@ -1152,6 +1149,9 @@
     <ClCompile Include="DSP\ConvertPdm.cpp">
       <Filter>DSP</Filter>
     </ClCompile>
+    <ClCompile Include="$(BSP_ROOT)\FreeRTOS\Source\portable\GCC\ARM_CM4F\port.c">
+      <Filter>Source files\Device-specific files\FreeRTOS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h">
@@ -1175,9 +1175,6 @@
     <ClInclude Include="Peripheral\I2SPdmAudioIn.h">
       <Filter>Peripheral</Filter>
     </ClInclude>
-    <ClInclude Include="Peripheral\pdm_filter.h">
-      <Filter>Peripheral</Filter>
-    </ClInclude>
     <ClInclude Include="Peripheral\I2SAudioOut.h">
       <Filter>Peripheral</Filter>
     </ClInclude>
@@ -1199,11 +1196,6 @@
     <ClInclude Include="DSP\ConvertPdmLookup.h">
       <Filter>DSP</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="Peripheral\libPDMFilter_GCC.a">
-      <Filter>Peripheral</Filter>
-    </Library>
   </ItemGroup>
   <ItemGroup>
     <LinkerScript Include="STM32F407VG_flash.lds">

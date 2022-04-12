@@ -4,37 +4,9 @@
 #include "ConvertPdmLookup.h"
 #include "I2SAudioOut.h"
 
-#define SAMPLES 16 * 8
-
 static uint8_t PDM_temp[992];
-static float32_t PCM_buffer[SAMPLES];
-static uint32_t counter;
 
 static void cost_calc(float *PCM_buff, uint32_t *count);
-static void PCM_post_processing(float *PCM_buff, int size);
-
-void PutPdmData(uint16_t *data128) {
-	ConvertPdm2Pcm(data128, &PCM_buffer[counter]);
-	counter += 16;
-
-	//	if (counter == 512) {
-	//		cost_calc(PCM_buffer, &counter);
-	//	}
-	//	if (counter == 1024) {
-	//		cost_calc(PCM_buffer, &counter);
-	//	}
-}
-
-bool PdmConverted(float32_t *outBuffer, int outBufferBytes) {
-	if (counter < SAMPLES) {
-		return false;
-	}
-	//	PCM_post_processing(PCM_buffer, counter);
-	counter = 0;
-	memcpy(outBuffer, PCM_buffer, outBufferBytes);
-
-	return true;
-}
 
 void ConvertPdm2Pcm(uint16_t *pdmData128, float32_t *pcmOutBuffer16) {
 	int i = 0, j, k, l, m;
@@ -68,39 +40,13 @@ void ConvertPdm2Pcm(uint16_t *pdmData128, float32_t *pcmOutBuffer16) {
 			m = j + 3;
 			temp = temp + temp1 + temp2 + temp3 + temp4;
 		}
-		pdmData128[i] = temp;
+		pcmOutBuffer16[i] = temp;
 		i++;
 	}
 	memcpy(&PDM_temp[0], &PDM_temp[512], 480);
 }
 
-// static void cost_calc(float *PCM_buff, uint32_t *count) {
-//	float cost = 0, temp;
-//	if (*count == 512) {
-//		for (int i = 0; i < 512; i++) {
-//			abzf(temp, PCM_buff[i]);
-//			cost += temp;
-//		}
-//		if (cost < 20) {
-//			*count = 0;
-//		}
-//	} else if (*count == 1024) {
-//		for (int i = 512; i < 1024; i++) {
-//			abzf(temp, PCM_buff[i]);
-//			cost += temp;
-//		}
-//		if (cost < 50) {
-//			if (cost > 20) {
-//				memcpy(PCM_buff, &PCM_buff[512], 2048);
-//				*count = 512;
-//			} else {
-//				*count = 0;
-//			}
-//		}
-//	}
-//}
-
-static void PCM_post_processing(float *PCM_buff, int size) {
+void PCM_post_processing(float *PCM_buff, int size) {
 	float avg = 0, max = 0, temp;
 	for (int i = 0; i < size; i++) {
 		avg += PCM_buff[i];

@@ -18,24 +18,15 @@ void InitPdmAudioIn() {
 	PdmAudioIn.ReadyPdmDataQueue = xQueueCreate(2, sizeof(uint16_t *));
 	PdmAudioIn.ReadyDecodedDataQueue = xQueueCreate(2, sizeof(float32_t *));
 
-	PdmAudioIn.Filter.LP_HZ = FilterLowPassHz;
-	PdmAudioIn.Filter.HP_HZ = FilterHighPassHz;
-	PdmAudioIn.Filter.Fs = SampleRate;
-	PdmAudioIn.Filter.Out_MicChannels = 1;
-	PdmAudioIn.Filter.In_MicChannels = 1;
-	PdmAudioIn.MicLevel = 250;
-
-	PDM_Filter_Init((PDMFilter_InitStruct *)&PdmAudioIn.Filter);
-
 	NVIC_Init();
 
-	SPI_Init(SampleRate * 2);
+	SPI_Init(SampleRate * 4);
 }
 
 void StartPdmAudioIn() {
 	I2S_HandleTypeDef hi2s2;
 	hi2s2.Instance = SPI2;
-	//	StartAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer), 80, false);
+	StartAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer), 80, false);
 	__HAL_I2S_ENABLE_IT(&hi2s2, (I2S_IT_RXNE /*| I2S_IT_ERR*/)); /* Enable RXNE and ERR interrupt */
 	__HAL_I2S_ENABLE(&hi2s2);
 }
@@ -91,7 +82,6 @@ extern "C" void SPI2_IRQHandler() {
 			PdmAudioIn.InternalBufferSize = 0;
 			PdmAudioIn.InternalBufferIndex = (PdmAudioIn.InternalBufferIndex + 1) & 0x01;
 			xQueueSendFromISR(PdmAudioIn.ReadyPdmDataQueue, (void *)&pBuffer, NULL);
-			TogglePortPin(TEST2_PORT, TEST2_PIN);
 		}
 	}
 }
@@ -105,16 +95,10 @@ void TaskPdmAudioDecode(void *arg) {
 		if (xQueueReceive(PdmAudioIn.ReadyPdmDataQueue, &data, (TickType_t)100) == pdPASS) {
 
 			SetPortPin(TEST1_PORT, TEST1_PIN);
-			
-			ConvertPdm2Pcm(data, pAudioRecBuf);
 
-			//			PutPdmData(data);
-			//			if (PdmConverted(pBuffer, sizeof(PdmAudioIn.DecodedBuffer0))) {
-			//				TogglePortPin(TEST1_PORT, TEST1_PIN);
-			//				PdmAudioIn.DecodedBufferIndex = (PdmAudioIn.DecodedBufferIndex + 1) & 0x01;
-			//				xQueueSendFromISR(PdmAudioIn.ReadyDecodedDataQueue, (void *)&pBuffer, NULL);
-			//			}
-			//			PDM_Filter_64_LSB((uint8_t *)data, (uint16_t *)pAudioRecBuf, PdmAudioIn.MicLevel, (PDMFilter_InitStruct *)&PdmAudioIn.Filter);
+			ConvertPdm2Pcm(data, pAudioRecBuf);
+			//			PCM_post_processing(pAudioRecBuf, 16);
+
 			ResetPortPin(TEST1_PORT, TEST1_PIN);
 			if (test) {
 				test = false;
@@ -131,7 +115,7 @@ void TaskPdmAudioDecode(void *arg) {
 
 			for (size_t i = 0; i < sizeof(pAudioRecBuf) / sizeof(pAudioRecBuf[0]); i++) {
 				float32_t val = pAudioRecBuf[i];
-				pBuffer[PdmAudioIn.DecodedBufferSize++] = val;
+				pBuffer[PdmAudioIn.DecodedBufferSize++] = val * 20000;
 				pBuffer[PdmAudioIn.DecodedBufferSize++] = 0;
 			}
 

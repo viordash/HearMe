@@ -3,9 +3,7 @@
 #include "Board.h"
 
 void ConvertPdm2Pcm(uint16_t *pdmData128, float32_t *pcmOutBuffer16);
-
-void PutPdmData(uint16_t *data128);
-bool PdmConverted(float32_t *outBuffer, int outBufferBytes);
+void PCM_post_processing(float *PCM_buff, int size);
 
 #ifdef __GNUC__
 //#define d(res,a,b)	__ASM volatile ("VSUB.F32 %[result],%[op1], %[op2]\n\t"	"VABS.F32 %[result], %[result]\n\t":[result] "+t" (res):[op1] "t" (a),[op2] "t"

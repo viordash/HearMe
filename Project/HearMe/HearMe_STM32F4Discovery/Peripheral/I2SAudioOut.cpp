@@ -84,7 +84,6 @@ void StartAudioOut(uint16_t *pData, uint32_t size, uint8_t volume, bool circular
 }
 
 void PlayAudioOut(uint16_t *pData, uint32_t size) {
-//	TogglePortPin(TEST2_PORT, TEST2_PIN);
 	size = size / 2;
 	AudioOut.Codec.TotalSize = size;
 	AudioOut.Codec.CurrentPos = pData;
@@ -271,7 +270,6 @@ extern "C" void DMA1_Stream7_IRQHandler(void) {
 			AudioOut.Codec.CurrentPos -= AudioOut.Codec.TotalSize;
 			AudioOut.Codec.RemainingSize = AudioOut.Codec.TotalSize;
 		}
-
 		if (AudioOut.Codec.RemainingSize > 0) {
 			AudioOut.Codec.CurrentPos += DMA_MAX(AudioOut.Codec.RemainingSize);
 			DmaTransmit(AudioOut.Codec.CurrentPos, DMA_MAX(AudioOut.Codec.RemainingSize));

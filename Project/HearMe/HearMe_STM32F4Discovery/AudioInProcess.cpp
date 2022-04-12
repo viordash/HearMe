@@ -34,17 +34,17 @@ void TaskAudioInProcess(void *arg) {
 		float32_t *decodedBuffer;
 		if (xQueueReceive(PdmAudioIn.ReadyDecodedDataQueue, &decodedBuffer, (TickType_t)100) == pdPASS) {
 
-			for (size_t i = 0; i < (sizeof(PdmAudioIn.DecodedBuffer0) / sizeof(PdmAudioIn.DecodedBuffer0[0])) / 2; i++) {
+			for (size_t i = 0; i < (sizeof(PdmAudioIn.DecodedBuffer0) / sizeof(PdmAudioIn.DecodedBuffer0[0])) / 1; i++) {
 				int16_t val = decodedBuffer[i * 2];
 				PdmAudioIn.StereoBuffer[i * 2] = val;
 				PdmAudioIn.StereoBuffer[(i * 2) + 1] = val;
 			}
 			PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
 
-			//			SetPortPin(TEST2_PORT, TEST2_PIN);
+			SetPortPin(TEST2_PORT, TEST2_PIN);
 			FftAnalyze(decodedBuffer, PdmAudioIn.FftMagnitude, sizeof(PdmAudioIn.FftMagnitude) / sizeof(PdmAudioIn.FftMagnitude[0]));
 			ExtractAudioDigest();
-			//			ResetPortPin(TEST2_PORT, TEST2_PIN);
+			ResetPortPin(TEST2_PORT, TEST2_PIN);
 
 			if (PdmAudioIn.RequestToStoreReferenceAudio && PdmAudioIn.MaxBinValue > 300000) {
 				PdmAudioIn.RequestToStoreReferenceAudio = false;
@@ -186,7 +186,6 @@ static bool PrepareAudioMatching(PTAudioDigest referenceFrame) {
 TAudioDigest localReferenceFrame;
 
 static void AudioMatching() {
-
 
 	int equability = 0;
 
