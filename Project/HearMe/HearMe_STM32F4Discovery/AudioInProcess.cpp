@@ -55,6 +55,7 @@ void TaskAudioInProcess(void *arg) {
 			}
 
 			if (PdmAudioIn.StoreReferenceAudio) {
+				//				PdmAudioIn.MicLevel = 150;
 				memcpy(&PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[PdmAudioIn.ReferenceAudioDigest.Index], &PdmAudioIn.CurrentAudioDigest,
 					   sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[PdmAudioIn.ReferenceAudioDigest.Index]));
 				PdmAudioIn.ReferenceAudioDigest.Index++;
@@ -62,11 +63,12 @@ void TaskAudioInProcess(void *arg) {
 				if (PdmAudioIn.ReferenceAudioDigest.Index
 					>= sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames) / sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[0])) {
 					PdmAudioIn.StoreReferenceAudio = false;
+					//					PdmAudioIn.MicLevel = 250;
 					PdmAudioIn.ReferenceAudioDigest.Index = 0;
 					WriteAudioDigest0(&PdmAudioIn.ReferenceAudioDigest.Fragment);
 					ChangeGreenLed(TLedMode::Off);
 				}
-			} else if (PdmAudioIn.MaxBinValue > 30000) {
+			} else if (PdmAudioIn.MaxBinValue > 50000) {
 				SetPortPin(TEST1_PORT, TEST1_PIN);
 				AudioMatching();
 				ResetPortPin(TEST1_PORT, TEST1_PIN);
@@ -86,7 +88,7 @@ static void ExtractAudioDigest() {
 	memset(PdmAudioIn.CurrentAudioDigest.FftBins, 0, sizeof(PdmAudioIn.CurrentAudioDigest.FftBins));
 	GetMaxMagnitude(PdmAudioIn.FftMagnitude, magnitudeSize, &maxBinValue, &binIndex);
 	binValue = maxBinValue;
-	const float32_t cutOff = maxBinValue / 8;
+	const float32_t cutOff = maxBinValue / 32;
 	int binCount = 10;
 
 	while (binValue > cutOff && binCount-- > 0) {
@@ -121,84 +123,89 @@ static uint8_t GetMaxValue(PTAudioDigest pAudioDigest) {
 	return out;
 }
 
-static bool PrepareAudioMatching(PTAudioDigest referenceFrame) {
-	uint32_t significantWeight = 0;
-	uint32_t equalsWeight = 0;
+static bool PrepareAudioMatching(PTAudioDigest referenceFrame, PTAudioDigest currentFrame) {
+	int significantCount = 0;
+	int equalsCount = 0;
 
 	for (size_t i = 0; i < sizeof(TAudioDigest::FftBins) / sizeof(TAudioDigest::FftBins[0]); i++) {
 		uint8_t reference = referenceFrame->FftBins[i];
 		if (reference == 0) {
-			PdmAudioIn.CurrentAudioDigest.FftBins[i] = 0;
+			currentFrame->FftBins[i] = 0;
 			continue;
 		}
-		significantWeight += reference;
+		significantCount++;
 
-		uint8_t sampleCurrent = PdmAudioIn.CurrentAudioDigest.FftBins[i];
+		uint8_t sampleCurrent = currentFrame->FftBins[i];
 		if (sampleCurrent > 0) {
-			equalsWeight += sampleCurrent;
+			equalsCount++;
 			continue;
 		}
 
 		uint8_t samplePrior = i > 0 //
-								  ? PdmAudioIn.CurrentAudioDigest.FftBins[i - 1]
+								  ? currentFrame->FftBins[i - 1]
 								  : 0;
 		if (samplePrior > 0 && referenceFrame->FftBins[i - 1] == 0) {
-			PdmAudioIn.CurrentAudioDigest.FftBins[i] = samplePrior;
-			PdmAudioIn.CurrentAudioDigest.FftBins[i - 1] = 0;
-			equalsWeight += samplePrior;
+			currentFrame->FftBins[i] = samplePrior;
+			currentFrame->FftBins[i - 1] = 0;
+			equalsCount++;
 			continue;
 		}
 
 		uint8_t sampleNext = i < (sizeof(TAudioDigest::FftBins) / sizeof(TAudioDigest::FftBins[0])) - 1 //
-								 ? PdmAudioIn.CurrentAudioDigest.FftBins[i + 1]
+								 ? currentFrame->FftBins[i + 1]
 								 : 0;
 		if (sampleNext > 0 && referenceFrame->FftBins[i + 1] == 0) {
-			PdmAudioIn.CurrentAudioDigest.FftBins[i] = sampleNext;
-			PdmAudioIn.CurrentAudioDigest.FftBins[i + 1] = 0;
-			equalsWeight += sampleNext;
+			currentFrame->FftBins[i] = sampleNext;
+			currentFrame->FftBins[i + 1] = 0;
+			equalsCount++;
 			continue;
 		}
 
 		uint8_t samplePriorPrior = i > 1 //
-									   ? PdmAudioIn.CurrentAudioDigest.FftBins[i - 2]
+									   ? currentFrame->FftBins[i - 2]
 									   : 0;
 		if (samplePriorPrior > 0 && referenceFrame->FftBins[i - 2] == 0) {
-			PdmAudioIn.CurrentAudioDigest.FftBins[i] = samplePriorPrior;
-			PdmAudioIn.CurrentAudioDigest.FftBins[i - 2] = 0;
-			equalsWeight += samplePriorPrior;
+			currentFrame->FftBins[i] = samplePriorPrior;
+			currentFrame->FftBins[i - 2] = 0;
+			equalsCount++;
 			continue;
 		}
 
 		uint8_t sampleNextNext = i < (sizeof(TAudioDigest::FftBins) / sizeof(TAudioDigest::FftBins[0])) - 2 //
-									 ? PdmAudioIn.CurrentAudioDigest.FftBins[i + 2]
+									 ? currentFrame->FftBins[i + 2]
 									 : 0;
 		if (sampleNextNext > 0 && referenceFrame->FftBins[i + 2] == 0) {
-			PdmAudioIn.CurrentAudioDigest.FftBins[i] = sampleNextNext;
-			PdmAudioIn.CurrentAudioDigest.FftBins[i + 2] = 0;
-			equalsWeight += sampleNextNext;
+			currentFrame->FftBins[i] = sampleNextNext;
+			currentFrame->FftBins[i + 2] = 0;
+			equalsCount++;
 			continue;
 		}
-		PdmAudioIn.CurrentAudioDigest.FftBins[i] = 0;
+		currentFrame->FftBins[i] = 0;
 		referenceFrame->FftBins[i] = 0;
 	}
-	const uint32_t significantCount_70perc = significantWeight - (significantWeight / 3);
-	return equalsWeight >= significantCount_70perc;
+	const int significantCount_70perc = significantCount - (significantCount / 3);
+	return equalsCount >= significantCount_70perc;
 }
 
 TAudioDigest localReferenceFrame;
+TAudioDigest localCurrentFrame;
 
 static void AudioMatching() {
-	if (test) {
-		test = false;
-	}
+	//	if (test) {
+	//		test = false;
+	//	}
 
 	int equability = 0;
+
+	if (test && PdmAudioIn.ReferenceAudioDigest.Index >= 1) {
+		test = false;
+	}
 
 	while (true) {
 		int significantCount = 0;
 		localReferenceFrame = PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[PdmAudioIn.ReferenceAudioDigest.Index];
-
-		if (!PrepareAudioMatching(&localReferenceFrame)) {
+		localCurrentFrame = PdmAudioIn.CurrentAudioDigest;
+		if (!PrepareAudioMatching(&localReferenceFrame, &localCurrentFrame)) {
 			if (++PdmAudioIn.ReferenceAudioDigest.Index
 				> (sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames) / sizeof(PdmAudioIn.ReferenceAudioDigest.Fragment.Frames[0]) / 3)) {
 				PdmAudioIn.ReferenceAudioDigest.Index = 0;
@@ -207,8 +214,8 @@ static void AudioMatching() {
 			}
 			continue;
 		}
-		NormalizeLevels(&localReferenceFrame);
-		NormalizeLevels(&PdmAudioIn.CurrentAudioDigest);
+		//		NormalizeLevels(&localReferenceFrame);
+		//		NormalizeLevels(&PdmAudioIn.CurrentAudioDigest);
 
 		for (size_t i = 0; i < sizeof(TAudioDigest::FftBins) / sizeof(TAudioDigest::FftBins[0]); i++) {
 			uint8_t reference = localReferenceFrame.FftBins[i];
@@ -216,7 +223,7 @@ static void AudioMatching() {
 				continue;
 			}
 			significantCount++;
-			uint8_t sampleCurrent = PdmAudioIn.CurrentAudioDigest.FftBins[i];
+			uint8_t sampleCurrent = localCurrentFrame.FftBins[i];
 			//			if (Match(reference, sampleCurrent)) {
 			if (sampleCurrent > 0) {
 				equability++;
@@ -238,7 +245,7 @@ static void AudioMatching() {
 	}
 
 	PdmAudioIn.Equability += equability;
-	if (PdmAudioIn.Equability > 30) {
+	if (PdmAudioIn.Equability > 5) {
 		ChangeBlueLed(TLedMode::Pulse);
 	}
 	PdmAudioIn.ReferenceAudioDigest.Index++;

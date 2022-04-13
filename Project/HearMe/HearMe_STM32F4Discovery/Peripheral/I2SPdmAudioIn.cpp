@@ -22,7 +22,7 @@ void InitPdmAudioIn() {
 	PdmAudioIn.Filter.Fs = SampleRate;
 	PdmAudioIn.Filter.Out_MicChannels = 1;
 	PdmAudioIn.Filter.In_MicChannels = 1;
-	PdmAudioIn.MicLevel = 150;
+	PdmAudioIn.MicLevel = 200;
 
 	PDM_Filter_Init((PDMFilter_InitStruct *)&PdmAudioIn.Filter);
 
