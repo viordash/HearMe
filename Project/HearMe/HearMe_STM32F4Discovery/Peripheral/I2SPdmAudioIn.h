@@ -50,7 +50,7 @@ typedef struct {
 
 	PDMFilter_InitStruct Filter;
 
-	//	int16_t StereoBuffer[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) * 1];
+	int16_t StereoBuffer[(sizeof(DecodedBuffer0) / sizeof(DecodedBuffer0[0])) * 1];
 } TPdmAudioIn, *PTPdmAudioIn;
 
 extern TPdmAudioIn PdmAudioIn;

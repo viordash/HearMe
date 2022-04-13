@@ -22,7 +22,7 @@ void InitPdmAudioIn() {
 	PdmAudioIn.Filter.Fs = SampleRate;
 	PdmAudioIn.Filter.Out_MicChannels = 1;
 	PdmAudioIn.Filter.In_MicChannels = 1;
-	PdmAudioIn.MicLevel = 250;
+	PdmAudioIn.MicLevel = 150;
 
 	PDM_Filter_Init((PDMFilter_InitStruct *)&PdmAudioIn.Filter);
 
@@ -34,7 +34,7 @@ void InitPdmAudioIn() {
 void StartPdmAudioIn() {
 	I2S_HandleTypeDef hi2s2;
 	hi2s2.Instance = SPI2;
-	//	StartAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer), 80, false);
+	StartAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer), 80, false);
 	__HAL_I2S_ENABLE_IT(&hi2s2, (I2S_IT_RXNE /*| I2S_IT_ERR*/)); /* Enable RXNE and ERR interrupt */
 	__HAL_I2S_ENABLE(&hi2s2);
 }

@@ -35,19 +35,19 @@ void TaskAudioInProcess(void *arg) {
 		float32_t *decodedBuffer;
 		if (xQueueReceive(PdmAudioIn.ReadyDecodedDataQueue, &decodedBuffer, (TickType_t)100) == pdPASS) {
 
-			//			for (size_t i = 0; i < (sizeof(PdmAudioIn.DecodedBuffer0) / sizeof(PdmAudioIn.DecodedBuffer0[0])) / 2; i++) {
-			//				int16_t val = decodedBuffer[i * 2];
-			//				PdmAudioIn.StereoBuffer[i * 2] = val;
-			//				PdmAudioIn.StereoBuffer[(i * 2) + 1] = val;
-			//			}
-			//			PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
+			for (size_t i = 0; i < (sizeof(PdmAudioIn.DecodedBuffer0) / sizeof(PdmAudioIn.DecodedBuffer0[0])) / 2; i++) {
+				int16_t val = decodedBuffer[i * 2];
+				PdmAudioIn.StereoBuffer[i * 2] = val;
+				PdmAudioIn.StereoBuffer[(i * 2) + 1] = val;
+			}
+			PlayAudioOut((uint16_t *)PdmAudioIn.StereoBuffer, sizeof(PdmAudioIn.StereoBuffer));
 
 			SetPortPin(TEST2_PORT, TEST2_PIN);
 			FftAnalyze(decodedBuffer, PdmAudioIn.FftMagnitude, sizeof(PdmAudioIn.FftMagnitude) / sizeof(PdmAudioIn.FftMagnitude[0]));
 			ExtractAudioDigest();
 			ResetPortPin(TEST2_PORT, TEST2_PIN);
 
-			if (PdmAudioIn.RequestToStoreReferenceAudio && PdmAudioIn.MaxBinValue > 300000) {
+			if (PdmAudioIn.RequestToStoreReferenceAudio && PdmAudioIn.MaxBinValue > 200000) {
 				PdmAudioIn.RequestToStoreReferenceAudio = false;
 				PdmAudioIn.StoreReferenceAudio = true;
 				PdmAudioIn.ReferenceAudioDigest.MatchedFramesCount = 0;
@@ -86,9 +86,10 @@ static void ExtractAudioDigest() {
 	memset(PdmAudioIn.CurrentAudioDigest.FftBins, 0, sizeof(PdmAudioIn.CurrentAudioDigest.FftBins));
 	GetMaxMagnitude(PdmAudioIn.FftMagnitude, magnitudeSize, &maxBinValue, &binIndex);
 	binValue = maxBinValue;
-	const float32_t cutOff = maxBinValue / 20;
+	const float32_t cutOff = maxBinValue / 8;
+	int binCount = 10;
 
-	while (binValue > cutOff) {
+	while (binValue > cutOff && binCount-- > 0) {
 		uint32_t startIndex;
 		uint32_t endIndex;
 
@@ -216,7 +217,7 @@ static void AudioMatching() {
 			}
 			significantCount++;
 			uint8_t sampleCurrent = PdmAudioIn.CurrentAudioDigest.FftBins[i];
-//			if (Match(reference, sampleCurrent)) {
+			//			if (Match(reference, sampleCurrent)) {
 			if (sampleCurrent > 0) {
 				equability++;
 				continue;
